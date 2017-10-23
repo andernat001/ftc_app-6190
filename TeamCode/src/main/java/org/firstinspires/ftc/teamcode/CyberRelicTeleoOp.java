@@ -61,6 +61,85 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
 
         super.loop();
 
+        if (gamepad1.dpad_left)
+        {
+            bDirection = true; // Arm is front.
+        }
+        if (gamepad1.dpad_right)
+        {
+            bDirection = false; // Collection is front
+        }
+
+        if (bDirection) // Glyph is front
+        {
+            powerRightA = velocityDrive + rotationDrive + strafeDrive;
+            powerRightB = velocityDrive + rotationDrive - strafeDrive;
+            powerLeftA = velocityDrive - rotationDrive - strafeDrive;
+            powerLeftB = velocityDrive - rotationDrive + strafeDrive;
+        }
+        else  // Relic is front
+        {
+            powerRightA = velocityDrive - rotationDrive - strafeDrive;
+            powerRightB = velocityDrive - rotationDrive + strafeDrive;
+            powerLeftA = velocityDrive + rotationDrive + strafeDrive;
+            powerLeftB = velocityDrive + rotationDrive - strafeDrive;
+        }
+
+        if (fieldOrient)
+        {
+            bDirection = true;
+        }
+
+        if (gamepad2.x)
+        {
+            grabbed = true;
+        }
+        if (gamepad1.x && grabbed)
+        {
+            grabbed = false;
+        }
+
+        if (grabbed)
+        {
+            servoGlyph1.setPosition(90);
+            servoGlyph2.setPosition(90);
+        }
+        if (!grabbed)
+        {
+            servoGlyph1.setPosition(45);
+            servoGlyph2.setPosition(45);
+        }
+
+        if (throttleLift <= 0.05 && throttleLift >= -0.05)
+        {
+            throttleLift = 0;
+        }
+
+
+        throttleLift = gamepad2.left_stick_y;  // For Run-to-Position, power polarity does not matter
+
+        // Clip and scale the throttle, and then set motor power.
+        throttleLift = Range.clip(throttleLift, -1, 1);
+        throttleLift = (float) scaleInput(throttleLift);
+        motorGlyphLift.setPower(throttleLift);
+
+        if(gamepad1.dpad_up)
+        {
+            fieldOrient = true;
+        }
+
+        if(gamepad1.dpad_down)
+        {
+            fieldOrient = false;
+        }
+
+        if(fieldOrient)
+        {
+            temp = y * Math.cos(gyro) + x * Math.sin(gyro);
+            x = -y * Math.sin(gyro) + x * Math.cos(gyro);
+            y = temp;
+        }
+
         // Set drive motor power
         motorRightA.setPower(powerRightA);
         motorRightB.setPower(powerRightB);
@@ -71,12 +150,6 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
         velocityDrive = -gamepad1.left_stick_y;
         strafeDrive = gamepad1.left_stick_x;
         rotationDrive = gamepad1.right_stick_x;
-
-        // Set algorithm
-        powerRightA = velocityDrive + rotationDrive + strafeDrive;
-        powerRightB = velocityDrive + rotationDrive - strafeDrive;
-        powerLeftA = velocityDrive - rotationDrive - strafeDrive;
-        powerLeftB = velocityDrive - rotationDrive + strafeDrive;
 
         // Scale drive motor power for better control at low power
         powerRightA = (float) scaleInput(powerRightA);
@@ -128,23 +201,6 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
             powerLeftA = Range.clip(powerLeftA, -1, 1);
             powerLeftB = Range.clip(powerLeftB, -1, 1);
 
-        }
-
-        if(gamepad1.dpad_up)
-        {
-            fieldOrient = true;
-        }
-
-        if(gamepad1.dpad_down)
-        {
-            fieldOrient = false;
-        }
-
-        if(fieldOrient)
-        {
-            temp = y * Math.cos(gyro) + x * Math.sin(gyro);
-            x = -y * Math.sin(gyro) + x * Math.cos(gyro);
-            y = temp;
         }
 
     }// End OpMode Loop Method

@@ -1,19 +1,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
+        import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.hardware.CRServo;
         import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorSimple;
         import com.qualcomm.robotcore.hardware.GyroSensor;
         import com.qualcomm.robotcore.hardware.Servo;
 
-
 public abstract class CyberRelicAbstract extends OpMode {
 
+    protected ModernRoboticsI2cRangeSensor
+            rangeSensor;
     // Set Servos
     protected Servo
-            placeHolderS;
+            servoGlyph1, servoGlyph2;
 
     protected ColorSensor
             placeHolderCs;
@@ -26,13 +29,16 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     protected DcMotor
             motorLeftA, motorLeftB,
-            motorRightA, motorRightB;
+            motorRightA, motorRightB,
+            motorGlyphLift;
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
             pulseCaseMoveDone,                          // Case move complete pulse
             red,
             blue,
-            fieldOrient;
+            fieldOrient,
+            bDirection,
+            grabbed;
 
     protected float
             targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
@@ -40,7 +46,8 @@ public abstract class CyberRelicAbstract extends OpMode {
             hsvValues[] = {0F, 0F, 0F},
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
-            velocityDrive, strafeDrive, rotationDrive;
+            velocityDrive, strafeDrive, rotationDrive,
+            throttleLift;
     // Auto: Values used to determine current color detected
 
     protected double
@@ -75,7 +82,11 @@ public abstract class CyberRelicAbstract extends OpMode {
             MOTOR_DRIVE_LEFT_B = "leftB",
             MOTOR_DRIVE_RIGHT_A = "rightA",
             MOTOR_DRIVE_RIGHT_B = "rightB",
-            SENSOR_GYRO = "gyro";
+            SENSOR_GYRO = "gyro",
+            SENSOR_RANGE = "range",
+            GLYPH_LEFT = "gLeft",
+            GLYPH_RIGHT = "gRight",
+            GLYPH_LIFT = "gLift";
 
     //------------------------------------------------------------------
     // Robot Initialization Method
@@ -86,24 +97,40 @@ public abstract class CyberRelicAbstract extends OpMode {
         // It appears all encoders are reset upon robot startup, but just in case, set all motor
         // modes to Stop-And-Reset-Encoders during initialization.
         motorLeftA = hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT_A);
-        motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLeftA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLeftA.setDirection(DcMotor.Direction.FORWARD);
 
         motorLeftB = hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT_B);
-        motorLeftB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLeftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLeftB.setDirection(DcMotor.Direction.FORWARD);
 
         motorRightA = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT_A);
-        motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightA.setDirection(DcMotor.Direction.REVERSE);
 
         motorRightB = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT_B);
-        motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
+
+        motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
+        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
+
+        servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
+
+        servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
 
         gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);       //Gyro Sensor
 
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, SENSOR_RANGE);
+
         seqRobot = 1;    // Set seqRobot = 1 to kick off the sequence.
+
+        servoGlyph1.setPosition(180);
+        servoGlyph2.setPosition(180);
+
+        fieldOrient = true;
+        bDirection = true;
     } // End OpMode Initialization Method
 
     //------------------------------------------------------------------
