@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
@@ -39,6 +40,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  * test mode: Present only to find the amount of feed back
  * a certain the light sensor receives on certain surfaces
  */
+@TeleOp(name = "ColorTest")
 public class CyberColorTest extends OpMode
 {
 	LightSensor colorSensor;

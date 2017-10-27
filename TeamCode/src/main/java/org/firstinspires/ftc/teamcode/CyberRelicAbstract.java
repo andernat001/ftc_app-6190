@@ -126,10 +126,10 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         seqRobot = 1;    // Set seqRobot = 1 to kick off the sequence.
 
+
         servoGlyph1.setPosition(180);
         servoGlyph2.setPosition(180);
 
-        fieldOrient = true;
         bDirection = true;
     } // End OpMode Initialization Method
 

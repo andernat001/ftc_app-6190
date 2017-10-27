@@ -36,9 +36,9 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "RelicBot")
-public class CyberRelicTeleoOp extends CyberRelicAbstract
+public class CyberRelicTeleOp extends CyberRelicAbstract
 {
-    public CyberRelicTeleoOp()
+    public CyberRelicTeleOp()
     {
     }
 
@@ -53,6 +53,11 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
         motorRightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftA.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        fieldOrient = true;
+
+
     }
 
     @Override
@@ -60,85 +65,6 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
     {
 
         super.loop();
-
-        if (gamepad1.dpad_left)
-        {
-            bDirection = true; // Arm is front.
-        }
-        if (gamepad1.dpad_right)
-        {
-            bDirection = false; // Collection is front
-        }
-
-        if (bDirection) // Glyph is front
-        {
-            powerRightA = velocityDrive + rotationDrive + strafeDrive;
-            powerRightB = velocityDrive + rotationDrive - strafeDrive;
-            powerLeftA = velocityDrive - rotationDrive - strafeDrive;
-            powerLeftB = velocityDrive - rotationDrive + strafeDrive;
-        }
-        else  // Relic is front
-        {
-            powerRightA = velocityDrive - rotationDrive - strafeDrive;
-            powerRightB = velocityDrive - rotationDrive + strafeDrive;
-            powerLeftA = velocityDrive + rotationDrive + strafeDrive;
-            powerLeftB = velocityDrive + rotationDrive - strafeDrive;
-        }
-
-        if (fieldOrient)
-        {
-            bDirection = true;
-        }
-
-        if (gamepad2.x)
-        {
-            grabbed = true;
-        }
-        if (gamepad1.x && grabbed)
-        {
-            grabbed = false;
-        }
-
-        if (grabbed)
-        {
-            servoGlyph1.setPosition(90);
-            servoGlyph2.setPosition(90);
-        }
-        if (!grabbed)
-        {
-            servoGlyph1.setPosition(45);
-            servoGlyph2.setPosition(45);
-        }
-
-        if (throttleLift <= 0.05 && throttleLift >= -0.05)
-        {
-            throttleLift = 0;
-        }
-
-
-        throttleLift = gamepad2.left_stick_y;  // For Run-to-Position, power polarity does not matter
-
-        // Clip and scale the throttle, and then set motor power.
-        throttleLift = Range.clip(throttleLift, -1, 1);
-        throttleLift = (float) scaleInput(throttleLift);
-        motorGlyphLift.setPower(throttleLift);
-
-        if(gamepad1.dpad_up)
-        {
-            fieldOrient = true;
-        }
-
-        if(gamepad1.dpad_down)
-        {
-            fieldOrient = false;
-        }
-
-        if(fieldOrient)
-        {
-            temp = y * Math.cos(gyro) + x * Math.sin(gyro);
-            x = -y * Math.sin(gyro) + x * Math.cos(gyro);
-            y = temp;
-        }
 
         // Set drive motor power
         motorRightA.setPower(powerRightA);
@@ -151,13 +77,32 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
         strafeDrive = gamepad1.left_stick_x;
         rotationDrive = gamepad1.right_stick_x;
 
+        //Field-Oriented drive code (start)
+        {
+            //Set doubles x,y,and gyro
+            x = strafeDrive;
+            y = velocityDrive;
+            gyro = gyroSensor.getHeading();
+
+            //Field-Oriented drive Algorithm
+            if (fieldOrient) {
+                temp = y * Math.cos(gyro) + x * Math.sin(gyro);
+                x = -y * Math.sin(gyro) + x * Math.cos(gyro);
+                y = temp;
+            }
+
+            //Set floats strafeDrive and velocityDrive
+            strafeDrive = (float) x;
+            velocityDrive = (float) y;
+        }
+
         // Scale drive motor power for better control at low power
         powerRightA = (float) scaleInput(powerRightA);
         powerRightB = (float) scaleInput(powerRightB);
         powerLeftA = (float) scaleInput(powerLeftA);
         powerLeftB = (float) scaleInput(powerLeftB);
 
-        // Round the joystick's value when between 0.05 and -0.05 to 0
+        //Create dead-zone for drive train controls
         if (gamepad1.left_stick_x <= 0.05 && gamepad1.left_stick_x >= -0.05)
         {
             gamepad1.left_stick_x = 0;
@@ -173,7 +118,7 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
             gamepad1.right_stick_x = 0;
         }
 
-        // If the left stick and the right stick is used it halves the power  of the motors
+        // If the left stick and the right stick is used it halves the power  of the motors for better accuracy
         if (gamepad1.left_stick_y > 0 || gamepad1.left_stick_y < 0 && gamepad1.right_stick_x > 0 || gamepad1.right_stick_x < 0)
         {
 
@@ -201,6 +146,71 @@ public class CyberRelicTeleoOp extends CyberRelicAbstract
             powerLeftA = Range.clip(powerLeftA, -1, 1);
             powerLeftB = Range.clip(powerLeftB, -1, 1);
 
+        }
+
+        //Change direction that is front for the robot
+        {
+            if (gamepad1.dpad_left) {
+                bDirection = true; // Arm is front.
+            }
+            if (gamepad1.dpad_right) {
+                bDirection = false; // Collection is front
+            }
+
+            if (fieldOrient)
+            {
+                bDirection = true;
+            }
+
+            if (bDirection) // Glyph is front
+            {
+                powerRightA = velocityDrive + rotationDrive + strafeDrive;
+                powerRightB = velocityDrive + rotationDrive - strafeDrive;
+                powerLeftA = velocityDrive - rotationDrive - strafeDrive;
+                powerLeftB = velocityDrive - rotationDrive + strafeDrive;
+            } else  // Relic is front
+            {
+                powerRightA = velocityDrive - rotationDrive - strafeDrive;
+                powerRightB = velocityDrive - rotationDrive + strafeDrive;
+                powerLeftA = velocityDrive + rotationDrive + strafeDrive;
+                powerLeftB = velocityDrive + rotationDrive - strafeDrive;
+            }
+        }
+
+        //Controls for grabbing the glyph
+        {
+            if (gamepad2.x) {
+                grabbed = true;
+            }
+            if (gamepad1.x && grabbed) {
+                grabbed = false;
+            }
+
+            if (grabbed) {
+                servoGlyph1.setPosition(90);
+                servoGlyph2.setPosition(90);
+            }
+            if (!grabbed) {
+                servoGlyph1.setPosition(45);
+                servoGlyph2.setPosition(45);
+            }
+        }
+
+        //Controls for lifting the glyph
+        {
+            //Set controls for lift
+            throttleLift = gamepad2.left_stick_y;
+
+            // Clip and scale the throttle, and then set motor power.
+            throttleLift = Range.clip(throttleLift, -1, 1);
+            throttleLift = (float) scaleInput(throttleLift);
+            motorGlyphLift.setPower(throttleLift);
+
+            //Create dead-zone for lift control
+            if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
+            {
+                gamepad2.left_stick_y = 0;
+            }
         }
 
     }// End OpMode Loop Method
