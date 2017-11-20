@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+        import com.qualcomm.hardware.bosch.BNO055IMU;
         import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,21 +9,25 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.DcMotorSimple;
         import com.qualcomm.robotcore.hardware.GyroSensor;
+        import com.qualcomm.robotcore.hardware.LightSensor;
         import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class CyberRelicAbstract extends OpMode {
 
     protected ModernRoboticsI2cRangeSensor
-            rangeSensor;
-    // Set Servos
-    protected Servo
-            servoGlyph1, servoGlyph2;
-
-    protected ColorSensor
-            placeHolderCs;
+            rangeSensor,rangeSensorF,rangeSensorB;
 
     protected GyroSensor
             gyroSensor;
+
+    // Set Servos
+    protected Servo
+            servoGlyph1, servoGlyph2, servoGem;
+
+    protected LightSensor
+            lightSensor;
+
+    BNO055IMU imu;
 
     protected CRServo
             placeHolderCrs;
@@ -38,7 +43,8 @@ public abstract class CyberRelicAbstract extends OpMode {
             blue,
             fieldOrient,
             bDirection,
-            grabbed;
+            grabbed,
+            leftCol,centerCol,rightCol;
 
     protected float
             targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
@@ -47,24 +53,34 @@ public abstract class CyberRelicAbstract extends OpMode {
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
             velocityDrive, strafeDrive, rotationDrive,
-            throttleLift;
+            throttleLift,
+            glyph1,glyph2;
     // Auto: Values used to determine current color detected
 
     protected double
             targetPower, // General motor power variable (%, -1.0 to 1.0)
             temp, gyro,
-            x,y;
+            x,y,
+            tbd;
 
 
     // Establish Integer Variables
     protected int
-            seqRobot, target,                               // Switch operation integer used to identify sequence step.
+            seqRobot, target, // Switch operation integer used to identify sequence step.
             targetPosLeftA, targetPosLeftB,
             targetPosRightA, targetPosRightB;      // Drive train motor target variables (encoder counts)
 
     // Establish Integer Constants
     final static int
-            PLACE_HOLDER = 0;
+            GEM_ROTATE = 90,
+            DECRIPT_ROTATE = 500,
+            GLYPH_ROTATE = 500,
+            END_ROTATE = 500,
+            TARGET_POS = 500,
+            GEM = 90,
+            BACK_ROTATE = 500,
+            BACK_ROTATE2 = 500,
+            START_ROTATE = 500;
     // Establish Float Constants
     final static float
             PLACE_HOLDER_FLOAT = 0f;
@@ -82,11 +98,17 @@ public abstract class CyberRelicAbstract extends OpMode {
             MOTOR_DRIVE_LEFT_B = "leftB",
             MOTOR_DRIVE_RIGHT_A = "rightA",
             MOTOR_DRIVE_RIGHT_B = "rightB",
+            SENSOR_LIGHT = "light",
             SENSOR_GYRO = "gyro",
-            SENSOR_RANGE = "range",
+            RANGE_F = "rangeF",
+            RANGE_B = "rangeB",
+            //SENSOR_RANGE = "range",
             GLYPH_LEFT = "gLeft",
             GLYPH_RIGHT = "gRight",
-            GLYPH_LIFT = "gLift";
+            SERVO_GEM = "gem";
+            //GLYPH_LIFT = "gLift";
+
+
 
     //------------------------------------------------------------------
     // Robot Initialization Method
@@ -112,23 +134,30 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
-        motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
-        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
+        //motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
+        //motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
 
-        servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
+        //servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
 
-        servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
+        //servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
 
-        gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);       //Gyro Sensor
+        servoGem = hardwareMap.servo.get(SERVO_GEM);
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, SENSOR_RANGE);
+        gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
+        lightSensor = hardwareMap.lightSensor.get(SENSOR_LIGHT);
 
-        seqRobot = 1;    // Set seqRobot = 1 to kick off the sequence.
 
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         servoGlyph1.setPosition(180);
         servoGlyph2.setPosition(180);
+
+        seqRobot = 1;
 
         bDirection = true;
     } // End OpMode Initialization Method
@@ -153,13 +182,14 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorRightB.setPower(0);
         motorLeftA.setPower(0);
         motorLeftB.setPower(0);
+        motorGlyphLift.setPower(0);
     } // End OpMode Stop Method
 
 
     //------------------------------------------------------------------
     // Miscellaneous Methods
     //------------------------------------------------------------------
-
+    
     // calcRotate Method
     // Calculate linear distance needed for desired rotation
     // Parameters:
@@ -194,6 +224,25 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         return target;
     }
+
+    char seeBeacon(int redVal, int blueVal, float hueVal)
+    {
+        {
+            if (redVal > 2 && hueVal <= 0)
+            {
+                return 'R';
+            }
+            else if (blueVal > 2 && hueVal > 200)
+            {
+                return 'B';
+            }
+            else
+            {
+                return 'N';
+            }
+        }
+    }
+
 
 
     // cmdMoveA Method
