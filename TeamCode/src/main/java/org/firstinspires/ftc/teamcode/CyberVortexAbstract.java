@@ -180,8 +180,8 @@ package org.firstinspires.ftc.teamcode;
                 SERVO_BUTTON_L = "buttonl",
                 SERVO_BUTTON_R = "buttonr",
                 SERVO_RELEASE = "release",
-        //SERVO_CYCLE = "cycle",
-        SENSOR_COLOR_BEACON = "beacon",
+                //SERVO_CYCLE = "cycle",
+                SENSOR_COLOR_BEACON = "beacon",
                 SENSOR_COLOR_LINE = "line",
                 SENSOR_GYRO = "gyro";
 
