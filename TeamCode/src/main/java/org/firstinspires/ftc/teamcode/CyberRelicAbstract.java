@@ -24,10 +24,10 @@ public abstract class CyberRelicAbstract extends OpMode {
     protected Servo
             servoGlyph1, servoGlyph2, servoGem;
 
-    protected LightSensor
-            lightSensor;
+    protected ColorSensor
+            colorSensor;
 
-    BNO055IMU imu;
+    //BNO055IMU imu;
 
     protected CRServo
             placeHolderCrs;
@@ -72,15 +72,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Establish Integer Constants
     final static int
-            GEM_ROTATE = 90,
-            DECRIPT_ROTATE = 500,
-            GLYPH_ROTATE = 500,
-            END_ROTATE = 500,
-            TARGET_POS = 500,
-            GEM = 90,
-            BACK_ROTATE = 500,
-            BACK_ROTATE2 = 500,
-            START_ROTATE = 500;
+            INC_VAL = 5;
     // Establish Float Constants
     final static float
             PLACE_HOLDER_FLOAT = 0f;
@@ -98,15 +90,14 @@ public abstract class CyberRelicAbstract extends OpMode {
             MOTOR_DRIVE_LEFT_B = "leftB",
             MOTOR_DRIVE_RIGHT_A = "rightA",
             MOTOR_DRIVE_RIGHT_B = "rightB",
-            SENSOR_LIGHT = "light",
+            SENSOR_COLOR = "color",
             SENSOR_GYRO = "gyro",
             RANGE_F = "rangeF",
             RANGE_B = "rangeB",
-            //SENSOR_RANGE = "range",
             GLYPH_LEFT = "gLeft",
             GLYPH_RIGHT = "gRight",
-            SERVO_GEM = "gem";
-            //GLYPH_LIFT = "gLift";
+            SERVO_GEM = "gem",
+            GLYPH_LIFT = "gLift";
 
 
 
@@ -134,28 +125,29 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
-        //motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
-        //motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
+        motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
+        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
 
-        //servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
+        servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
 
-        //servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
+        servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
 
         servoGem = hardwareMap.servo.get(SERVO_GEM);
 
         gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
-        lightSensor = hardwareMap.lightSensor.get(SENSOR_LIGHT);
+
+        colorSensor = hardwareMap.colorSensor.get(SENSOR_COLOR);
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //imu.initialize(parameters);
 
-        servoGlyph1.setPosition(180);
-        servoGlyph2.setPosition(180);
+        servoGlyph1.setPosition(.69);
+        servoGlyph2.setPosition(.92);
 
         seqRobot = 1;
 

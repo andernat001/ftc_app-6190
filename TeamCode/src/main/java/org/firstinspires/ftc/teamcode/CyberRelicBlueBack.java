@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 /**
  * Created by Steve on 11/11/2017.
  */
@@ -20,10 +21,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class CyberRelicBlueBack extends CyberRelicAbstract {
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
+    BNO055IMU imu;
     @Override
     public void init() {
         super.init();
-        lightSensor.enableLed(true);
+        colorSensor.enableLed(true);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
     @Override
     public void loop(){
@@ -48,13 +54,15 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
 
             case 2: {
+                servoGlyph1.setPosition(tbd);
+                servoGlyph2.setPosition(tbd);
                 servoGem.setPosition(90);
                 seqRobot++;
                 break;
             }
 
             case 3: {
-                lightSensor.getLightDetected();
+                colorSensor.getClass();
                 if (red) {
                     if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() < 350){
                         motorLeftA.setPower(0);
@@ -130,7 +138,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 6: {
-                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 340){
+                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);

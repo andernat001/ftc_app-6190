@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.util.Range;
+        import static android.os.SystemClock.sleep;
         import com.qualcomm.hardware.bosch.BNO055IMU;
 
         import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -55,11 +56,12 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         motorRightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftA.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fieldOrient = false;
         bDirection = true;
-
+        grabbed = false;
+        //lightSensor.enableLed(false);
 
         /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -97,7 +99,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         //Set doubles x,y,and gyro
         x = strafeDrive;
         y = velocityDrive;
-        gyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        gyro = gyroSensor.getHeading(); //(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         //Field-Oriented drive Algorithm
         if (fieldOrient)
@@ -206,39 +208,91 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
 
         if (grabbed)
         {
-            servoGlyph1.setPosition(90);
-            servoGlyph2.setPosition(90);
+            servoGlyph1.setPosition(1);
+            servoGlyph2.setPosition(0.60);
         }
         if (!grabbed)
         {
-            servoGlyph1.setPosition(45);
-            servoGlyph2.setPosition(45);
+            servoGlyph1.setPosition(0.83);
+            servoGlyph2.setPosition(0.77);
         }
-
-
 /*
-        //Controls for lifting the glyph
-            //Set controls for lift
-        throttleLift = gamepad2.left_stick_y;
-
-            // Clip and scale the throttle, and then set motor power.
-        throttleLift = Range.clip(throttleLift, -1, 1);
-        throttleLift = (float) scaleInput(throttleLift);
-        motorGlyphLift.setPower(throttleLift);
-
-            //Create dead-zone for lift control
-        if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
+        if (gamepad2.y)
         {
-            gamepad2.left_stick_y = 0;
+            glyph1 = glyph1 + INC_VAL;
+            servoGlyph1.setPosition(glyph1/180);
+            sleep(100);
+
         }
+
+        if (gamepad2.a)
+        {
+            if (glyph1 > 0)
+            {
+                glyph1 = glyph1 - INC_VAL;
+            }
+            else
+            {
+                glyph1 = 0;
+            }
+            servoGlyph1.setPosition(glyph1/180);
+            sleep(100);
+
+        }
+        if (gamepad2.x)
+        {
+            if (glyph2 < 180)
+            {
+                glyph2 = glyph2 + INC_VAL;
+            }
+            else
+            {
+                glyph1 = 180;
+            }
+            servoGlyph2.setPosition(glyph2/180);
+            sleep(100);
+
+        }
+
+        if (gamepad2.b)
+        {
+            glyph2 = glyph2 - INC_VAL;
+            servoGlyph2.setPosition(glyph2/180);
+            sleep(100);
+
+        }
+
 */
 
+        if(motorGlyphLift.getCurrentPosition() >= -7150){
+
+            //Controls for lifting the glyph
+            //Set controls for lift
+            throttleLift = gamepad2.left_stick_y;
+            // Clip and scale the throttle, and then set motor power.
+            throttleLift = Range.clip(throttleLift, -1, 1);
+            throttleLift = (float) scaleInput(throttleLift);
+            motorGlyphLift.setPower(throttleLift);
+
+            //Create dead-zone for lift control
+            if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
+            {
+                gamepad2.left_stick_y = 0;
+            }
+        }
+        else {
+            motorGlyphLift.setTargetPosition(-7145);
+            motorGlyphLift.setPower(.1);
+        }
 
 
 
+
+        if(gamepad2.left_trigger != 0){
+        telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
-        telemetry.update();
+        telemetry.update();}
 
 
 // End OpMode Loop Method

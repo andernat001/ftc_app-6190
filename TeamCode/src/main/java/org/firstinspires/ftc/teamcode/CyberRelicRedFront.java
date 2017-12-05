@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -27,13 +28,17 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
 
 
     VuforiaLocalizer vuforia;
-
+    BNO055IMU imu;
     @Override
     public void init() {
 
         super.init();
 
-        lightSensor.enableLed(true);
+        colorSensor.enableLed(true);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
     }
 
@@ -64,13 +69,15 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
 
 
             case 2: {
+                servoGlyph1.setPosition(tbd);
+                servoGlyph2.setPosition(tbd);
                 servoGem.setPosition(90);
                 seqRobot++;
                 break;
             }
 
             case 3: {
-                lightSensor.getLightDetected();
+                colorSensor.getClass();
 
                 if (blue) {
                     if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() < 350){
@@ -149,7 +156,7 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
                 break;
             }
             case 6: {
-                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 340){
+                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
