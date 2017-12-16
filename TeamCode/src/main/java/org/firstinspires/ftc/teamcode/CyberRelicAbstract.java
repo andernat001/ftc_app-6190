@@ -54,6 +54,7 @@ public abstract class CyberRelicAbstract extends OpMode {
             powerRightA, powerRightB,
             velocityDrive, strafeDrive, rotationDrive,
             throttleLift,
+            gem,
             glyph1,glyph2;
     // Auto: Values used to determine current color detected
 
@@ -72,10 +73,14 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Establish Integer Constants
     final static int
+            GEM_RUN_TIME = 250,
             INC_VAL = 5;
     // Establish Float Constants
     final static float
-            PLACE_HOLDER_FLOAT = 0f;
+    GLYPH_1_GRAB = 1f,
+    GLYPH_2_GRAB = 0.53F,
+    GLYPH_1_RELEASE = 0.83f,
+    GLYPH_2_RELEASE = 0.77f;
 
     // Establish Double Constants
     final static double
@@ -192,7 +197,6 @@ public abstract class CyberRelicAbstract extends OpMode {
     {
         return rotateDeg / anglePerIn;
     }
-
 
     // cmdMoveR Method
     // Convert desired distance from inches to encoder counts, establish new motor target, and set

@@ -68,9 +68,9 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
             }
 
             case 2: {
-                servoGlyph1.setPosition(tbd);
-                servoGlyph2.setPosition(tbd);
-                servoGem.setPosition(90);
+                servoGlyph1.setPosition(GLYPH_1_GRAB);
+                servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                servoGem.setPosition(2100);
                 seqRobot++;
                 break;
             }
@@ -399,7 +399,7 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
 
             case 18:
             {
-                if (rangeSensorF.cmUltrasonic() > 9.8)
+                if (rangeSensorF.cmUltrasonic() > 22)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -412,26 +412,29 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
 
             case 20:
             {
-                servoGlyph1.setPosition(tbd);
-                servoGlyph2.setPosition(tbd);
+                servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 seqRobot++;
                 break;
             }
 
             case 21:
             {
-                targetDrRotateDeg = 0f;
-                targetDrDistInch = -5f; // Set target distance
-                targetPower = 0.1d;  // Set power
-
-                targetPosLeftA = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
-
-
-                seqRobot++;
-                break;
+                if (motorLeftA.getCurrentPosition() > -297){
+                    motorLeftA.setPower(-.2);
+                    motorRightA.setPower(-.2);
+                    motorLeftB.setPower(-.2);
+                    motorRightB.setPower(-.2);
+                }
+                else
+                {
+                    motorLeftA.setPower(0);
+                    motorRightA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightB.setPower(0);
+                    seqRobot++;
+                    break;
+                }
             }
 
             case 23:
@@ -460,28 +463,6 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
             {
                 break;
             }
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
 }

@@ -87,11 +87,11 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         rotationDrive = gamepad1.right_stick_x;
 
         //Field-Oriented drive code
-        if (gamepad1.dpad_up)
+        if (gamepad1.y)
         {
             fieldOrient = true;
         }
-        if (gamepad1.dpad_down)
+        if (gamepad1.a)
         {
             fieldOrient = false;
         }
@@ -104,12 +104,14 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         //Field-Oriented drive Algorithm
         if (fieldOrient)
         {
-            temp = y * Math.cos(gyro) + x * Math.sin(gyro);
-            x = -y * Math.sin(gyro) + x * Math.cos(gyro);
+            temp = y * Math.cos(Math.toDegrees(gyro)) + x * Math.sin(Math.toDegrees(gyro));
+            x = -y * Math.sin(Math.toDegrees(gyro)) + x * Math.cos(Math.toDegrees(gyro));
             y = temp;
         }
         telemetry.addData("Strafe:", + strafeDrive);
         telemetry.addData("Velocity:", + velocityDrive);
+        telemetry.addData("ON:",Boolean.toString(fieldOrient));
+        telemetry.addData("Gyro", + gyroSensor.getHeading());
         telemetry.update();
 
         //Set floats strafeDrive and velocityDrive
@@ -130,10 +132,10 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             powerLeftB = velocityDrive - rotationDrive + strafeDrive;
         } else  // Relic is front
         {
-            powerRightA = velocityDrive - rotationDrive - strafeDrive;
-            powerRightB = velocityDrive - rotationDrive + strafeDrive;
-            powerLeftA = velocityDrive + rotationDrive + strafeDrive;
-            powerLeftB = velocityDrive + rotationDrive - strafeDrive;
+            powerRightA = -velocityDrive + rotationDrive - strafeDrive;
+            powerRightB = -velocityDrive + rotationDrive + strafeDrive;
+            powerLeftA = -velocityDrive - rotationDrive + strafeDrive;
+            powerLeftB = -velocityDrive - rotationDrive - strafeDrive;
         }
 
         //Create dead-zone for drive train controls
@@ -180,14 +182,16 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
 
         }
 
-        //Change direction that is front for the robot
-        if (gamepad1.dpad_left)
+        //Switch Drive
+        if (gamepad1.dpad_up)
         {
             bDirection = true; // Arm is front.
+            sleep(500);
         }
-        if (gamepad1.dpad_right)
+        if (gamepad1.dpad_down)
         {
             bDirection = false; // Collection is front
+            sleep(500);
         }
 
         if (fieldOrient)
@@ -200,16 +204,18 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         if (gamepad2.x && !grabbed)
         {
             grabbed = true;
+            sleep(500);
         }
         else if (gamepad2.x && grabbed)
         {
             grabbed = false;
+            sleep(500);
         }
 
         if (grabbed)
         {
             servoGlyph1.setPosition(1);
-            servoGlyph2.setPosition(0.60);
+            servoGlyph2.setPosition(0.53);
         }
         if (!grabbed)
         {
@@ -261,10 +267,9 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             sleep(100);
 
         }
-
 */
 
-        if(motorGlyphLift.getCurrentPosition() >= -7150){
+        if(motorGlyphLift.getCurrentPosition() >= -6450){
 
             //Controls for lifting the glyph
             //Set controls for lift
@@ -281,18 +286,14 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             }
         }
         else {
-            motorGlyphLift.setTargetPosition(-7145);
-            motorGlyphLift.setPower(.1);
+            motorGlyphLift.setTargetPosition(-6445);
+            motorGlyphLift.setPower(.2);
         }
 
-
-
-
-        if(gamepad2.left_trigger != 0){
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
-        telemetry.update();}
+        telemetry.update();
 
 
 // End OpMode Loop Method

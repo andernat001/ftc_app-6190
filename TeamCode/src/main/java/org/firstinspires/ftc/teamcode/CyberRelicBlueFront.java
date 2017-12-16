@@ -67,11 +67,10 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 break;
             }
 
-
             case 2: {
-                servoGlyph1.setPosition(tbd);
-                servoGlyph2.setPosition(tbd);
-                servoGem.setPosition(90);
+                servoGlyph1.setPosition(GLYPH_1_GRAB);
+                servoGlyph2.setPosition(GLYPH_2_GRAB);
+                servoGem.setPosition(2100);
                 seqRobot++;
                 break;
             }
@@ -192,7 +191,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-
                     telemetry.addData("VuMark", "%s visible", vuMark);
 
                     if (vuMark == RelicRecoveryVuMark.LEFT) {
@@ -208,7 +206,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         centerCol = false;
                         rightCol = true;
                     }
-
 
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
 
@@ -229,8 +226,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 } else {
                     telemetry.addData("VuMark", "not visible");
                 }
-
-
                 telemetry.update();
                 seqRobot++;
                 break;
@@ -263,13 +258,13 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             case 10: {
 
                 if (leftCol) {
-                    if (rangeSensorB.cmUltrasonic() < 104) {
+                    if (rangeSensorB.cmUltrasonic() < 110) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
                     }
-                    if (rangeSensorB.cmUltrasonic() > 104) {
+                    if (rangeSensorB.cmUltrasonic() > 111) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -278,13 +273,13 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
 
                 if (centerCol) {
-                    if (rangeSensorB.cmUltrasonic() < 123) {
+                    if (rangeSensorB.cmUltrasonic() < 127.5) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
                     }
-                    if (rangeSensorB.cmUltrasonic() >= 123) {
+                    if (rangeSensorB.cmUltrasonic() >= 128.5) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -293,12 +288,12 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
 
                 if (rightCol) {
-                    if (rangeSensorB.cmUltrasonic() < 142) {
+                    if (rangeSensorB.cmUltrasonic() < 143) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
-                    } else if (rangeSensorB.cmUltrasonic() > 142) {
+                    } else if (rangeSensorB.cmUltrasonic() > 144) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -327,30 +322,31 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
+                seqRobot++;
+                break;
             }
 
             case 14: {
 
                 if (leftCol) {
 
-                    if (rangeSensorB.cmUltrasonic() < 104) {
-                        motorLeftA.setPower(.1);
-                        motorLeftB.setPower(.1);
-                        motorRightA.setPower(.1);
-                        motorRightB.setPower(.1);
+                    if (rangeSensorB.cmUltrasonic() < 110) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
                     } else {
                         seqRobot++;
                         break;
                     }
                 }
 
-
                 if (centerCol) {
-                    if (rangeSensorB.cmUltrasonic() < 123) {
-                        motorLeftA.setPower(.1);
-                        motorLeftB.setPower(.1);
-                        motorRightA.setPower(.1);
-                        motorRightB.setPower(.1);
+                    if (rangeSensorB.cmUltrasonic() < 127) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
                     } else {
                         seqRobot++;
                         break;
@@ -358,18 +354,17 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
 
                 if (rightCol) {
-                    if (rangeSensorB.cmUltrasonic() < 142) {
-                        motorLeftA.setPower(.1);
-                        motorLeftB.setPower(.1);
-                        motorRightA.setPower(.1);
-                        motorRightB.setPower(.1);
+                    if (rangeSensorB.cmUltrasonic() < 143) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
                     } else {
                         seqRobot++;
                         break;
                     }
                 }
             }
-
 
             case 16:
             {
@@ -391,7 +386,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
 
             case 18:
             {
-                if (rangeSensorF.cmUltrasonic() > 9.8) {
+                if (rangeSensorF.cmUltrasonic() > 22) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(.1);
@@ -402,29 +397,31 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
             }
 
-
             case 20:
             {
-                servoGlyph1.setPosition(tbd);
-                servoGlyph2.setPosition(tbd);
+                servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 seqRobot++;
                 break;
             }
 
             case 21:
             {
-                targetDrRotateDeg = 0f;
-                targetDrDistInch = -5f; // Set target distance
-                targetPower = 0.1d;  // Set power
-
-                targetPosLeftA = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, (float)ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
-
-
-                seqRobot++;
-                break;
+                if (motorLeftA.getCurrentPosition() > -297){
+                    motorLeftA.setPower(-.2);
+                    motorRightA.setPower(-.2);
+                    motorLeftB.setPower(-.2);
+                    motorRightB.setPower(-.2);
+                }
+                else
+                {
+                    motorLeftA.setPower(0);
+                    motorRightA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightB.setPower(0);
+                    seqRobot++;
+                    break;
+                }
             }
 
             case 23:
@@ -453,28 +450,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             {
                 break;
             }
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
     }
