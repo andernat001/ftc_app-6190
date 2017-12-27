@@ -61,7 +61,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
 
-            case 3: {
+            case 3: {/*
                 colorSensor.getClass();
                 if (red) {
                     if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() < 350){
@@ -84,26 +84,26 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                         motorRightA.setPower(-.1);
                         motorRightB.setPower(-.1);
                     }
-                }
+                }*/
                 seqRobot++;
                 break;
             }
 
             case 4: {
-                servoGem.setPosition(0);
-                if (gyroSensor.getHeading() < 1 && gyroSensor.getHeading() > 359) {
+                //servoGem.setPosition(0);
+                if (gyro < 1 && gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 0 && gyroSensor.getHeading() <179 ){
+                else if (gyro > 0 && gyro <179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 360 && gyroSensor.getHeading() > 181)
+                else if(gyro < 360 && gyro > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -138,7 +138,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 6: {
-                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 250){
+                if(gyro > 180 && gyro <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -204,19 +204,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
 
             case 8: {
-                if (gyroSensor.getHeading() < 1 || gyroSensor.getHeading() > 359) {
+                if (gyro < 1 || gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 1 && gyroSensor.getHeading() < 179 ){
+                else if (gyro > 1 && gyro < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 359 && gyroSensor.getHeading() > 181)
+                else if(gyro < 359 && gyro > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -242,19 +242,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 12: {
-                if (gyroSensor.getHeading() < 91 && gyroSensor.getHeading() > 89) {
+                if (gyro < 91 && gyro > 89) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 91){
+                else if (gyro > 91){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 89)
+                else if(gyro < 89)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -308,19 +308,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 16: {
-                if (gyroSensor.getHeading() < 1 || gyroSensor.getHeading() > 359) {
+                if (gyro < 1 || gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 1 && gyroSensor.getHeading() < 179 ){
+                else if (gyro > 1 && gyro < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 359 && gyroSensor.getHeading() > 181)
+                else if(gyro < 359 && gyro > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -347,13 +347,12 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 20: {
-                if (motorLeftA.getCurrentPosition() > -297){
+                if (rangeSensorF.cmUltrasonic() < 5){
                     motorLeftA.setPower(-.2);
                     motorRightA.setPower(-.2);
                     motorLeftB.setPower(-.2);
                     motorRightB.setPower(-.2);
-                }
-                else
+                } else
                 {
                     motorLeftA.setPower(0);
                     motorRightA.setPower(0);
@@ -364,7 +363,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 }
             }
             case 22: {
-                if (gyroSensor.getHeading() < 90.25 || gyroSensor.getHeading() > 89.75) {
+                if (gyro < 90.25 || gyro > 89.75) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);

@@ -79,7 +79,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 colorSensor.getClass();
 
                 if (red) {
-                    if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() < 350){
+                    if(gyro > 180 && gyro < 350){
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
@@ -93,7 +93,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
 
                 if (blue) {
-                    if (gyroSensor.getHeading() < 10) {
+                    if (gyro < 10) {
                         motorLeftA.setPower(.1);
                         motorLeftB.setPower(.1);
                         motorRightA.setPower(-.1);
@@ -106,21 +106,21 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             }
 
             case 4: {
-                servoGem.setPosition(0);
+                //servoGem.setPosition(0);
 
-                if (gyroSensor.getHeading() < 1 && gyroSensor.getHeading() > 359) {
+                if (gyro < 1 && gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 0 && gyroSensor.getHeading() <179 ){
+                else if (gyro > 0 && gyro <179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 360 && gyroSensor.getHeading() > 181)
+                else if(gyro < 360 && gyro > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -157,7 +157,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 break;
             }
             case 6: {
-                if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() <= 250){
+                if(gyro > 180 && gyro <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -232,19 +232,19 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             }
 
             case 8: {
-                if (gyroSensor.getHeading() < 1 || gyroSensor.getHeading() > 359) {
+                if (gyro < 1 || gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 1 && gyroSensor.getHeading() < 179 ){
+                else if (gyro > 1 && gyro < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyroSensor.getHeading() < 359 && gyroSensor.getHeading() > 181)
+                else if(gyro < 359 && gyro > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -305,18 +305,18 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             }
 
             case 12: {
-                if(gyroSensor.getHeading() < 1 || gyroSensor.getHeading() > 359){
+                if(gyro < 1 || gyro > 359){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyroSensor.getHeading() > 0 && gyroSensor.getHeading() < 179) {
+                else if (gyro > 0 && gyro < 179) {
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
-                } else if (gyroSensor.getHeading() < 360 && gyroSensor.getHeading() > 181) {
+                } else if (gyro < 360 && gyro > 181) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
@@ -368,13 +368,13 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
 
             case 16:
             {
-                if (gyroSensor.getHeading() < 271) {
+                if (gyro < 271) {
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                if (gyroSensor.getHeading() > 269) {
+                if (gyro > 269) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
@@ -407,7 +407,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
 
             case 21:
             {
-                if (motorLeftA.getCurrentPosition() > -297){
+                if (rangeSensorF.cmUltrasonic() < 5){
                     motorLeftA.setPower(-.2);
                     motorRightA.setPower(-.2);
                     motorLeftB.setPower(-.2);
@@ -426,7 +426,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
 
             case 23:
             {
-                if (gyroSensor.getHeading() < 90.25 || gyroSensor.getHeading() > 89.75) {
+                if (gyro < 90.25 || gyro > 89.75) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -440,7 +440,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 seqRobot++;
                 break;
             }
-
             case 99:  // Done
             {
                 break;

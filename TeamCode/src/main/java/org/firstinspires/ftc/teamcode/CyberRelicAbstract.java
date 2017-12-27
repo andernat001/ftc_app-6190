@@ -12,13 +12,17 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.hardware.LightSensor;
         import com.qualcomm.robotcore.hardware.Servo;
 
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 public abstract class CyberRelicAbstract extends OpMode {
 
     protected ModernRoboticsI2cRangeSensor
             rangeSensor,rangeSensorF,rangeSensorB;
 
-    protected GyroSensor
-            gyroSensor;
+    //protected GyroSensor
+           // gyroSensor;
 
     // Set Servos
     protected Servo
@@ -27,7 +31,7 @@ public abstract class CyberRelicAbstract extends OpMode {
     protected ColorSensor
             colorSensor;
 
-    //BNO055IMU imu;
+    BNO055IMU imu;
 
     protected CRServo
             placeHolderCrs;
@@ -77,10 +81,10 @@ public abstract class CyberRelicAbstract extends OpMode {
             INC_VAL = 5;
     // Establish Float Constants
     final static float
-    GLYPH_1_GRAB = 1f,
-    GLYPH_2_GRAB = 0.53F,
-    GLYPH_1_RELEASE = 0.83f,
-    GLYPH_2_RELEASE = 0.77f;
+    GLYPH_1_GRAB = 0.16f,
+    GLYPH_2_GRAB = 0.75f,
+    GLYPH_1_RELEASE = 0.08f,
+    GLYPH_2_RELEASE = 0.86f;
 
     // Establish Double Constants
     final static double
@@ -96,13 +100,13 @@ public abstract class CyberRelicAbstract extends OpMode {
             MOTOR_DRIVE_RIGHT_A = "rightA",
             MOTOR_DRIVE_RIGHT_B = "rightB",
             SENSOR_COLOR = "color",
-            SENSOR_GYRO = "gyro",
+            //SENSOR_GYRO = "gyro",
             RANGE_F = "rangeF",
             RANGE_B = "rangeB",
             GLYPH_LEFT = "gLeft",
             GLYPH_RIGHT = "gRight",
-            SERVO_GEM = "gem",
-            GLYPH_LIFT = "gLift";
+            GLYPH_LIFT = "gLift",
+            SERVO_GEM = "gem";
 
 
 
@@ -140,7 +144,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         servoGem = hardwareMap.servo.get(SERVO_GEM);
 
-        gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
+        //gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
 
         colorSensor = hardwareMap.colorSensor.get(SENSOR_COLOR);
 
@@ -148,13 +152,15 @@ public abstract class CyberRelicAbstract extends OpMode {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 
-        //imu = hardwareMap.get(BNO055IMU.class, "imu");
-        //imu.initialize(parameters);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
-        servoGlyph1.setPosition(.69);
-        servoGlyph2.setPosition(.92);
+        servoGlyph1.setPosition(.61);
+        servoGlyph2.setPosition(.55);
 
         seqRobot = 1;
+
+        gyro = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         bDirection = true;
     } // End OpMode Initialization Method

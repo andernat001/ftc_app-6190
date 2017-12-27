@@ -61,13 +61,11 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         fieldOrient = false;
         bDirection = true;
         grabbed = false;
-        //lightSensor.enableLed(false);
-
-        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-
+        colorSensor.enableLed(false);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);*/
+        imu.initialize(parameters);
     }
 
     @Override
@@ -82,9 +80,9 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         motorLeftB.setPower(powerLeftB);
 
         // Set controls
-        velocityDrive = gamepad1.left_stick_y;
+        velocityDrive = -gamepad1.left_stick_y;
         strafeDrive = gamepad1.left_stick_x;
-        rotationDrive = gamepad1.right_stick_x;
+        rotationDrive = -gamepad1.right_stick_x;
 
         //Field-Oriented drive code
         if (gamepad1.y)
@@ -96,10 +94,9 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             fieldOrient = false;
         }
 
-        //Set doubles x,y,and gyro
+        //Set doubles x and y
         x = strafeDrive;
         y = velocityDrive;
-        gyro = gyroSensor.getHeading(); //(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         //Field-Oriented drive Algorithm
         if (fieldOrient)
@@ -111,7 +108,6 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         telemetry.addData("Strafe:", + strafeDrive);
         telemetry.addData("Velocity:", + velocityDrive);
         telemetry.addData("ON:",Boolean.toString(fieldOrient));
-        telemetry.addData("Gyro", + gyroSensor.getHeading());
         telemetry.update();
 
         //Set floats strafeDrive and velocityDrive
@@ -130,7 +126,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             powerRightB = velocityDrive + rotationDrive - strafeDrive;
             powerLeftA = velocityDrive - rotationDrive - strafeDrive;
             powerLeftB = velocityDrive - rotationDrive + strafeDrive;
-        } else  // Relic is front
+        } else  // Back is front
         {
             powerRightA = -velocityDrive + rotationDrive - strafeDrive;
             powerRightB = -velocityDrive + rotationDrive + strafeDrive;
@@ -198,8 +194,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         {
             bDirection = true;
         }
-
-
+/*
         //Controls for grabbing the glyph
         if (gamepad2.x && !grabbed)
         {
@@ -211,18 +206,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             grabbed = false;
             sleep(500);
         }
-
-        if (grabbed)
-        {
-            servoGlyph1.setPosition(1);
-            servoGlyph2.setPosition(0.53);
-        }
-        if (!grabbed)
-        {
-            servoGlyph1.setPosition(0.83);
-            servoGlyph2.setPosition(0.77);
-        }
-/*
+*//*
         if (gamepad2.y)
         {
             glyph1 = glyph1 + INC_VAL;
@@ -244,31 +228,40 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             servoGlyph1.setPosition(glyph1/180);
             sleep(100);
 
-        }
+        }*/
         if (gamepad2.x)
         {
-            if (glyph2 < 180)
+            if (gem < 180)
             {
-                glyph2 = glyph2 + INC_VAL;
+                gem = gem + INC_VAL;
             }
             else
             {
-                glyph1 = 180;
+                gem = 180;
             }
-            servoGlyph2.setPosition(glyph2/180);
+            servoGem.setPosition(gem/180);
             sleep(100);
 
         }
 
         if (gamepad2.b)
         {
-            glyph2 = glyph2 - INC_VAL;
-            servoGlyph2.setPosition(glyph2/180);
+            gem= gem - INC_VAL;
+            servoGem.setPosition(gem/180);
             sleep(100);
-
+        }
+/*
+        if (grabbed)
+        {
+            servoGlyph1.setPosition(0.25);
+            servoGlyph2.setPosition(0.65);
+        }
+        if (!grabbed)
+        {
+            servoGlyph1.setPosition(0.08);
+            servoGlyph2.setPosition(0.86);
         }
 */
-
         if(motorGlyphLift.getCurrentPosition() >= -6450){
 
             //Controls for lifting the glyph
@@ -293,6 +286,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
+        telemetry.addData("Gem", servoGem.getPosition());
         telemetry.update();
 
 
