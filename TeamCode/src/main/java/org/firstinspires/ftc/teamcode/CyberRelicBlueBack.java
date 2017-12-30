@@ -56,15 +56,15 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             case 2: {
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
-                servoGem.setPosition(2100);
+                gemDown();
                 seqRobot++;
                 break;
             }
 
-            case 3: {/*
+            case 3: {
                 colorSensor.getClass();
                 if (red) {
-                    if(gyroSensor.getHeading() > 180 && gyroSensor.getHeading() < 350){
+                    if(gyro > 180 && gyro < 350){
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
@@ -78,19 +78,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 }
 
                 if (blue) {
-                    if (gyroSensor.getHeading() < 10) {
+                    if (gyro < 10) {
                         motorLeftA.setPower(.1);
                         motorLeftB.setPower(.1);
                         motorRightA.setPower(-.1);
                         motorRightB.setPower(-.1);
                     }
-                }*/
+                }
                 seqRobot++;
                 break;
             }
 
             case 4: {
-                //servoGem.setPosition(0);
+                gemUp();
                 if (gyro < 1 && gyro > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);

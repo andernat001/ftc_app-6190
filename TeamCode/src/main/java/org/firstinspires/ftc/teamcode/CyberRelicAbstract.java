@@ -188,6 +188,33 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorGlyphLift.setPower(0);
     } // End OpMode Stop Method
 
+    public void gemDown()
+    {
+        //Set the amount of time we need the servo to run out for to the current time + PUSHER_RUN_TIME constant.
+        long inTime = System.currentTimeMillis() + GEM_RUN_TIME + 250;
+
+        //While the timer hasn't reached outTime, have the servo run forward.
+        while (System.currentTimeMillis() < inTime)
+        {
+            servoGem.setDirection(Servo.Direction.FORWARD);
+            servoGem.setPosition(0); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
+        }
+        servoGem.setPosition(.5);
+    }
+
+    public void gemUp()
+    {
+        //Set the amount of time we need the servo to run out for to the current time + PUSHER_RUN_TIME constant.
+        long outTime = System.currentTimeMillis() + GEM_RUN_TIME;
+
+        //While the timer hasn't reached outTime, have the servo run forward.
+        while (System.currentTimeMillis() < outTime)
+        {
+            servoGem.setDirection(Servo.Direction.REVERSE);
+            servoGem.setPosition(0); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
+        }
+        servoGem.setPosition(.5);
+    }
 
     //------------------------------------------------------------------
     // Miscellaneous Methods

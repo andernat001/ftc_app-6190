@@ -105,10 +105,10 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             x = -y * Math.sin(Math.toDegrees(gyro)) + x * Math.cos(Math.toDegrees(gyro));
             y = temp;
         }
+
         telemetry.addData("Strafe:", + strafeDrive);
         telemetry.addData("Velocity:", + velocityDrive);
         telemetry.addData("ON:",Boolean.toString(fieldOrient));
-        telemetry.update();
 
         //Set floats strafeDrive and velocityDrive
         strafeDrive = (float) x;
@@ -194,7 +194,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         {
             bDirection = true;
         }
-/*
+
         //Controls for grabbing the glyph
         if (gamepad2.x && !grabbed)
         {
@@ -206,7 +206,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             grabbed = false;
             sleep(500);
         }
-*//*
+/*
         if (gamepad2.y)
         {
             glyph1 = glyph1 + INC_VAL;
@@ -228,41 +228,48 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             servoGlyph1.setPosition(glyph1/180);
             sleep(100);
 
-        }*/
+        }
         if (gamepad2.x)
         {
-            if (gem < 180)
+            if (glyph2 < 180)
             {
-                gem = gem + INC_VAL;
+                glyph2 = glyph2 + INC_VAL;
             }
             else
             {
-                gem = 180;
+                glyph2 = 180;
             }
-            servoGem.setPosition(gem/180);
+            servoGlyph2.setPosition(glyph2/180);
             sleep(100);
 
         }
 
         if (gamepad2.b)
         {
-            gem= gem - INC_VAL;
-            servoGem.setPosition(gem/180);
+            if (glyph2 > 0)
+            {
+                glyph2 = glyph2 - INC_VAL;
+            }
+            else
+            {
+                glyph2 = 0;
+            }
+            servoGlyph2.setPosition(glyph2/180);
             sleep(100);
         }
-/*
+*/
+
         if (grabbed)
         {
-            servoGlyph1.setPosition(0.25);
-            servoGlyph2.setPosition(0.65);
-        }
+        servoGlyph1.setPosition(0.25);
+        servoGlyph2.setPosition(0.65);
+    }
         if (!grabbed)
         {
-            servoGlyph1.setPosition(0.08);
-            servoGlyph2.setPosition(0.86);
-        }
-*/
-        if(motorGlyphLift.getCurrentPosition() >= -6450){
+        servoGlyph1.setPosition(0.08);
+        servoGlyph2.setPosition(0.86);
+    }
+        if(motorGlyphLift.getCurrentPosition() >= -6450 || gamepad1.left_stick_y > 0){
 
             //Controls for lifting the glyph
             //Set controls for lift
@@ -279,14 +286,12 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             }
         }
         else {
-            motorGlyphLift.setTargetPosition(-6445);
-            motorGlyphLift.setPower(.2);
+            motorGlyphLift.setPower(0);
         }
 
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
-        telemetry.addData("Gem", servoGem.getPosition());
         telemetry.update();
 
 

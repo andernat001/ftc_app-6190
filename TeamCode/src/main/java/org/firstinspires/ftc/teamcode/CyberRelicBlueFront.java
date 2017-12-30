@@ -70,7 +70,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             case 2: {
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
-                servoGem.setPosition(2100);
+                gemDown();
                 seqRobot++;
                 break;
             }
@@ -106,7 +106,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             }
 
             case 4: {
-                //servoGem.setPosition(0);
+                gemUp();
 
                 if (gyro < 1 && gyro > 359) {
                     motorLeftA.setPower(0);
