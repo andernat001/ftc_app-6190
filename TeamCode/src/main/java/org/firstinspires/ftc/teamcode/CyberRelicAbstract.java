@@ -42,7 +42,7 @@ public abstract class CyberRelicAbstract extends OpMode {
             motorGlyphLift;
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
-            pulseCaseMoveDone,                          // Case move complete pulse
+            pulseCaseMoveDone, // Case move complete pulse
             red,
             blue,
             fieldOrient,
@@ -81,10 +81,10 @@ public abstract class CyberRelicAbstract extends OpMode {
             INC_VAL = 5;
     // Establish Float Constants
     final static float
-    GLYPH_1_GRAB = 0.16f,
-    GLYPH_2_GRAB = 0.75f,
-    GLYPH_1_RELEASE = 0.08f,
-    GLYPH_2_RELEASE = 0.86f;
+    GLYPH_1_GRAB = 0.97f,
+    GLYPH_2_GRAB = 0.30f,
+    GLYPH_1_RELEASE = 0.61f,
+    GLYPH_2_RELEASE = 0.75f;
 
     // Establish Double Constants
     final static double
@@ -155,8 +155,8 @@ public abstract class CyberRelicAbstract extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        servoGlyph1.setPosition(.61);
-        servoGlyph2.setPosition(.55);
+        servoGlyph1.setPosition(0.33);
+        servoGlyph2.setPosition(0.97);
 
         seqRobot = 1;
 

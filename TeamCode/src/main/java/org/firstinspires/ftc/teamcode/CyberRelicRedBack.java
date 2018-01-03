@@ -68,8 +68,8 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
             }
 
             case 2: {
-                servoGlyph1.setPosition(GLYPH_1_GRAB);
-                servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                //servoGlyph1.setPosition(GLYPH_1_GRAB);
+                //servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 gemDown();
                 seqRobot++;
                 break;
@@ -411,8 +411,8 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
 
             case 20:
             {
-                servoGlyph1.setPosition(GLYPH_1_RELEASE);
-                servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                //servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                //servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 seqRobot++;
                 break;
             }
@@ -436,7 +436,7 @@ public class CyberRelicRedBack extends CyberRelicAbstract {
 
             case 23:
             {
-                if (gyro < 90.25 || gyro > 89.75) {
+                if (gyro > 89.75) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);

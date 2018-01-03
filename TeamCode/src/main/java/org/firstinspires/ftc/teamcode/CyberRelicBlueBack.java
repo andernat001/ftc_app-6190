@@ -54,8 +54,8 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
 
             case 2: {
-                servoGlyph1.setPosition(GLYPH_1_GRAB);
-                servoGlyph2.setPosition(GLYPH_2_GRAB);
+                //servoGlyph1.setPosition(GLYPH_1_GRAB);
+                //servoGlyph2.setPosition(GLYPH_2_GRAB);
                 gemDown();
                 seqRobot++;
                 break;
@@ -341,8 +341,8 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 19: {
-                servoGlyph1.setPosition(GLYPH_1_RELEASE);
-                servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                //servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                //servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 seqRobot++;
                 break;
             }

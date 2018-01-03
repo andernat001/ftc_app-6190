@@ -153,8 +153,6 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         // If the left stick and the right stick is used it halves the power  of the motors for better accuracy
         if (gamepad1.left_stick_y > 0 || gamepad1.left_stick_y < 0 && gamepad1.right_stick_x > 0 || gamepad1.right_stick_x < 0)
         {
-
-
             powerRightA = Range.clip(powerRightA, -0.5f, 0.5f);
             powerRightB = Range.clip(powerRightB, -0.5f, 0.5f);
             powerLeftA = Range.clip(powerLeftA, -0.5f, 0.5f);
@@ -257,25 +255,23 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             servoGlyph2.setPosition(glyph2/180);
             sleep(100);
         }
-*/
 
+*/
         if (grabbed)
         {
-        servoGlyph1.setPosition(0.25);
-        servoGlyph2.setPosition(0.65);
+        servoGlyph1.setPosition(GLYPH_1_GRAB);
+        servoGlyph2.setPosition(GLYPH_2_GRAB);
     }
         if (!grabbed)
         {
-        servoGlyph1.setPosition(0.08);
-        servoGlyph2.setPosition(0.86);
+        servoGlyph1.setPosition(GLYPH_1_RELEASE);
+        servoGlyph2.setPosition(GLYPH_2_RELEASE);
     }
-        if(motorGlyphLift.getCurrentPosition() >= -6450 || gamepad1.left_stick_y > 0){
-
+        if((motorGlyphLift.getCurrentPosition() >= -3200) ||(gamepad2.left_stick_y > 0)){
             //Controls for lifting the glyph
             //Set controls for lift
             throttleLift = gamepad2.left_stick_y;
-            // Clip and scale the throttle, and then set motor power.
-            throttleLift = Range.clip(throttleLift, -1, 1);
+            // Scale the throttle, and then set motor power.
             throttleLift = (float) scaleInput(throttleLift);
             motorGlyphLift.setPower(throttleLift);
 
@@ -283,6 +279,12 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
             {
                 gamepad2.left_stick_y = 0;
+            }
+
+            if ((motorGlyphLift.getCurrentPosition() <= 1500) && (gamepad2.left_stick_y > 0)){
+                throttleLift = Range.clip(throttleLift, -0.125f, 0.125f);
+            }else{
+                throttleLift = Range.clip(throttleLift, -0.25f, 0.25f);
             }
         }
         else {
@@ -292,6 +294,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
+        telemetry.addData("y-axis", gamepad2.left_stick_y);
         telemetry.update();
 
 
