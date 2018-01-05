@@ -11,6 +11,7 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.hardware.GyroSensor;
         import com.qualcomm.robotcore.hardware.LightSensor;
         import com.qualcomm.robotcore.hardware.Servo;
+        import static android.os.SystemClock.sleep;
 
         import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,7 +27,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Set Servos
     protected Servo
-            servoGlyph1, servoGlyph2, servoGem;
+            servoGlyph1, servoGlyph2;
 
     protected ColorSensor
             colorSensor;
@@ -34,7 +35,7 @@ public abstract class CyberRelicAbstract extends OpMode {
     BNO055IMU imu;
 
     protected CRServo
-            placeHolderCrs;
+            servoGem;
 
     protected DcMotor
             motorLeftA, motorLeftB,
@@ -77,7 +78,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Establish Integer Constants
     final static int
-            GEM_RUN_TIME = 250,
+            GEM_RUN_TIME = 1000,
             INC_VAL = 5;
     // Establish Float Constants
     final static float
@@ -101,8 +102,6 @@ public abstract class CyberRelicAbstract extends OpMode {
             MOTOR_DRIVE_RIGHT_B = "rightB",
             SENSOR_COLOR = "color",
             //SENSOR_GYRO = "gyro",
-            RANGE_F = "rangeF",
-            RANGE_B = "rangeB",
             GLYPH_LEFT = "gLeft",
             GLYPH_RIGHT = "gRight",
             GLYPH_LIFT = "gLift",
@@ -142,12 +141,13 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
 
-        servoGem = hardwareMap.servo.get(SERVO_GEM);
+        servoGem = hardwareMap.crservo.get(SERVO_GEM);
 
         //gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
 
         colorSensor = hardwareMap.colorSensor.get(SENSOR_COLOR);
-
+        rangeSensorF = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeF");
+        rangeSensorB = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeB");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -192,14 +192,17 @@ public abstract class CyberRelicAbstract extends OpMode {
     {
         //Set the amount of time we need the servo to run out for to the current time + PUSHER_RUN_TIME constant.
         long inTime = System.currentTimeMillis() + GEM_RUN_TIME + 250;
+        servoGem.setPower(-1); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
 
         //While the timer hasn't reached outTime, have the servo run forward.
         while (System.currentTimeMillis() < inTime)
         {
-            servoGem.setDirection(Servo.Direction.FORWARD);
-            servoGem.setPosition(0); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
+            telemetry.addData("Time", System.currentTimeMillis());
+            telemetry.addData("inTime", inTime);
+            telemetry.update();
+            sleep(10);
         }
-        servoGem.setPosition(.5);
+        servoGem.setPower(0);
     }
 
     public void gemUp()
@@ -210,10 +213,9 @@ public abstract class CyberRelicAbstract extends OpMode {
         //While the timer hasn't reached outTime, have the servo run forward.
         while (System.currentTimeMillis() < outTime)
         {
-            servoGem.setDirection(Servo.Direction.REVERSE);
-            servoGem.setPosition(0); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
+            servoGem.setPower(-1); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
         }
-        servoGem.setPosition(.5);
+        servoGem.setPower(0);
     }
 
     //------------------------------------------------------------------

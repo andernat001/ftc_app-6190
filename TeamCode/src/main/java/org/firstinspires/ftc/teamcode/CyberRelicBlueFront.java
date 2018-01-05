@@ -19,8 +19,8 @@ package org.firstinspires.ftc.teamcode;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+    import static android.os.SystemClock.sleep;
 
-    import static java.lang.Thread.sleep;
 
 @Autonomous(name = "RelicBlueFront", group = "RiderModes")
 public class CyberRelicBlueFront extends CyberRelicAbstract{
@@ -71,10 +71,10 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
 
             case 2: {
                 telemetry.addData("2", true);
-                telemetry.update();
+                gemDown();
+                sleep(500);
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
-                gemDown();
                 seqRobot++;
                 break;
             }
@@ -106,7 +106,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightB.setPower(-.1);
                     }
                 }
-
+                sleep(750);
                 seqRobot++;
                 break;
             }
@@ -135,7 +135,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
-
+                sleep(750);
                 seqRobot++;
                 break;
             }
@@ -273,6 +273,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
                 telemetry.addData("7", true);
                 telemetry.update();
+                sleep(250);
                 seqRobot++;
                 break;
             }
@@ -299,6 +300,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
+                sleep(750);
                 seqRobot++;
                 break;
             }
@@ -349,6 +351,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightB.setPower(-.05);
                     }
                 }
+                sleep(1000);
                 seqRobot++;
                 break;
             }
@@ -389,6 +392,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
                     } else {
+                        sleep(500);
                         seqRobot++;
                         break;
                     }
@@ -401,6 +405,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
                     } else {
+                        sleep(500);
                         seqRobot++;
                         break;
                     }
@@ -413,6 +418,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
                     } else {
+                        sleep(500);
                         seqRobot++;
                         break;
                     }
@@ -435,6 +441,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
+                sleep(500);
                 seqRobot++;
                 break;
             }
@@ -449,6 +456,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 } else {
+                    sleep(750);
                     seqRobot++;
                     break;
                 }
@@ -460,6 +468,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 telemetry.update();
                 servoGlyph1.setPosition(GLYPH_1_RELEASE);
                 servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                sleep(500);
                 seqRobot++;
                 break;
             }
@@ -480,6 +489,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightB.setPower(0);
+                    sleep(750);
                     seqRobot++;
                     break;
                 }
@@ -500,6 +510,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
+                sleep(1000);
                 seqRobot++;
                 break;
             }

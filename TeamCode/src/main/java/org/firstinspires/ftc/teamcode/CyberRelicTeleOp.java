@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.Range;
         import static android.os.SystemClock.sleep;
         import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -290,6 +291,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         else {
             motorGlyphLift.setPower(0);
         }
+
 
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
