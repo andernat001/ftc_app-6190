@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import static java.lang.Thread.sleep;
 /**
  * Created by Steve on 11/11/2017.
  */
@@ -26,21 +27,13 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
     public void init() {
         super.init();
         colorSensor.enableLed(true);
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+
     }
     @Override
     public void loop(){
-        super.loop();
         switch (seqRobot) {
 
             case 1: {
-                motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -56,7 +49,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             case 2: {
                 //servoGlyph1.setPosition(GLYPH_1_GRAB);
                 //servoGlyph2.setPosition(GLYPH_2_GRAB);
-                gemDown();
+                //gemDown();
                 seqRobot++;
                 break;
             }
@@ -64,7 +57,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             case 3: {
                 colorSensor.getClass();
                 if (red) {
-                    if(gyro > 180 && gyro < 350){
+                    if(gyro() > 180 && gyro() < 350){
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
@@ -78,7 +71,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 }
 
                 if (blue) {
-                    if (gyro < 10) {
+                    if (gyro() < 10) {
                         motorLeftA.setPower(.1);
                         motorLeftB.setPower(.1);
                         motorRightA.setPower(-.1);
@@ -90,20 +83,20 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
 
             case 4: {
-                gemUp();
-                if (gyro < 1 && gyro > 359) {
+                //gemUp();
+                if (gyro() < 1 && gyro() > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 0 && gyro <179 ){
+                else if (gyro() > 0 && gyro() <179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 360 && gyro > 181)
+                else if(gyro() < 360 && gyro() > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -122,10 +115,6 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             case 11:
             case 9:
             case 5: {
-                motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -138,7 +127,7 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 6: {
-                if(gyro > 180 && gyro <= 250){
+                if(gyro() > 180 && gyro() <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -204,19 +193,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
 
             case 8: {
-                if (gyro < 1 || gyro > 359) {
+                if (gyro() < 1 || gyro() > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 1 && gyro < 179 ){
+                else if (gyro() > 1 && gyro() < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 359 && gyro > 181)
+                else if(gyro() < 359 && gyro() > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -242,19 +231,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 12: {
-                if (gyro < 91 && gyro > 89) {
+                if (gyro() < 91 && gyro() > 89) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 91){
+                else if (gyro() > 91){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 89)
+                else if(gyro() < 89)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -308,19 +297,19 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                 break;
             }
             case 16: {
-                if (gyro < 1 || gyro > 359) {
+                if (gyro() < 1 || gyro() > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 1 && gyro < 179 ){
+                else if (gyro() > 1 && gyro() < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 359 && gyro > 181)
+                else if(gyro() < 359 && gyro() > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
@@ -352,18 +341,17 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
                     motorRightA.setPower(-.2);
                     motorLeftB.setPower(-.2);
                     motorRightB.setPower(-.2);
-                } else
-                {
+                } else {
                     motorLeftA.setPower(0);
                     motorRightA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightB.setPower(0);
+                }
                     seqRobot++;
                     break;
-                }
             }
             case 22: {
-                if (gyro < 90.25 || gyro > 89.75) {
+                if (gyro() < 90.25 || gyro() > 89.75) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -387,4 +375,11 @@ public class CyberRelicBlueBack extends CyberRelicAbstract {
             }
         }
         }
+    private void slp(int slptime) {
+        try {
+            sleep(slptime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     }

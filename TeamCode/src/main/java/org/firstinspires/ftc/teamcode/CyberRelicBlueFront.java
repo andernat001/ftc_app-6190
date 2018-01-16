@@ -19,8 +19,7 @@ package org.firstinspires.ftc.teamcode;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
     import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-    import static android.os.SystemClock.sleep;
-
+    import static java.lang.Thread.sleep;
 
 @Autonomous(name = "RelicBlueFront", group = "RiderModes")
 public class CyberRelicBlueFront extends CyberRelicAbstract{
@@ -36,27 +35,17 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
         super.init();
 
         colorSensor.enableLed(true);
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
     }
 
     @Override
     public void loop() {
 
-        super.loop();
-
         switch (seqRobot) {
 
-            case 1: {
+            case 1:
                 telemetry.addData("1", true);
                 telemetry.update();
-                motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -65,27 +54,32 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 motorLeftB.setTargetPosition(0);
                 motorRightA.setTargetPosition(0);
                 motorRightB.setTargetPosition(0);
+                telemetry.addData("Time", System.currentTimeMillis());
+                telemetry.update();
                 seqRobot++;
                 break;
-            }
 
-            case 2: {
+
+            case 2:
                 telemetry.addData("2", true);
-                gemDown();
-                sleep(500);
+                telemetry.addData("Time", System.currentTimeMillis());
+                telemetry.update();
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
+                servoGem.setPosition(0);
+                slp(1000);
                 seqRobot++;
                 break;
-            }
 
-            case 3: {
+
+            case 3:
                 telemetry.addData("3", true);
+                telemetry.addData("Time", System.currentTimeMillis());
                 telemetry.update();
                 colorSensor.getClass();
 
                 if (red) {
-                    if(gyro > 180 && gyro < 350){
+                    if(gyro() > 180 && gyro() < 350){
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
@@ -99,46 +93,46 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
 
                 if (blue) {
-                    if (gyro < 10) {
+                    if (gyro() < 10) {
                         motorLeftA.setPower(.1);
                         motorLeftB.setPower(.1);
                         motorRightA.setPower(-.1);
                         motorRightB.setPower(-.1);
                     }
                 }
-                sleep(750);
+                slp(750);
                 seqRobot++;
                 break;
-            }
 
-            case 4: {
+            case 4:
                 telemetry.addData("4", true);
+                telemetry.addData("Time", System.currentTimeMillis());
                 telemetry.update();
-                gemUp();
+                servoGem.setPosition(0);
 
-                if (gyro < 1 && gyro > 359) {
+                if (gyro() < 1 && gyro() > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 0 && gyro <179 ){
+                else if (gyro() > 0 && gyro() <179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 360 && gyro > 181)
+                else if(gyro() < 360 && gyro() > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
-                sleep(750);
+                slp(750);
                 seqRobot++;
                 break;
-            }
+
 
             case 24:
             case 22:
@@ -148,7 +142,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             case 13:
             case 11:
             case 9:
-            case 5: {
+            case 5:
                 if (seqRobot == 5){
                     telemetry.addData("5", true);
                     telemetry.update();
@@ -184,10 +178,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     telemetry.addData("24", true);
                     telemetry.update();
                 }
-                motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -198,11 +188,11 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 motorRightB.setTargetPosition(0);
                 seqRobot++;
                 break;
-            }
-            case 6: {
+
+            case 6:
                 telemetry.addData("6", true);
                 telemetry.update();
-                if(gyro > 180 && gyro <= 250){
+                if(gyro() > 180 && gyro() <= 250){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -215,9 +205,9 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
                 seqRobot++;
                 break;
-            }
 
-            case 7: {
+
+            case 7:
 
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -273,39 +263,39 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
                 telemetry.addData("7", true);
                 telemetry.update();
-                sleep(250);
+                slp(250);
                 seqRobot++;
                 break;
-            }
 
-            case 8: {
+
+            case 8:
                 telemetry.addData("8", true);
                 telemetry.update();
-                if (gyro < 1 || gyro > 359) {
+                if (gyro() < 1 || gyro() > 359) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 1 && gyro < 179 ){
+                else if (gyro() > 1 && gyro() < 179 ){
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                else if(gyro < 359 && gyro > 181)
+                else if(gyro() < 359 && gyro() > 181)
                 {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
-                sleep(750);
+                slp(750);
                 seqRobot++;
                 break;
-            }
 
-            case 10: {
+
+            case 10:
                 telemetry.addData("10", true);
                 telemetry.update();
                 if (leftCol) {
@@ -351,26 +341,26 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorRightB.setPower(-.05);
                     }
                 }
-                sleep(1000);
+                slp(1000);
                 seqRobot++;
                 break;
-            }
 
-            case 12: {
+
+            case 12:
                 telemetry.addData("12", true);
                 telemetry.update();
-                if(gyro < 1 || gyro > 359){
+                if(gyro() < 1 || gyro() > 359){
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                 }
-                else if (gyro > 0 && gyro < 179) {
+                else if (gyro() > 0 && gyro() < 179) {
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
-                } else if (gyro < 360 && gyro > 181) {
+                } else if (gyro() < 360 && gyro() > 181) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
@@ -378,9 +368,9 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                 }
                 seqRobot++;
                 break;
-            }
 
-            case 14: {
+
+            case 14:
                 telemetry.addData("14", true);
                 telemetry.update();
 
@@ -391,11 +381,8 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    } else {
-                        sleep(500);
-                        seqRobot++;
-                        break;
                     }
+
                 }
 
                 if (centerCol) {
@@ -404,10 +391,6 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    } else {
-                        sleep(500);
-                        seqRobot++;
-                        break;
                     }
                 }
 
@@ -417,64 +400,62 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    } else {
-                        sleep(500);
-                        seqRobot++;
-                        break;
                     }
                 }
-            }
+                slp(500);
+                seqRobot++;
+                break;
+
 
             case 16:
-            {
+
                 telemetry.addData("16", true);
                 telemetry.update();
-                if (gyro < 271) {
+                if (gyro() < 271) {
                     motorLeftA.setPower(-.1);
                     motorLeftB.setPower(-.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
                 }
-                if (gyro > 269) {
+                if (gyro() > 269) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
-                sleep(500);
+                slp(500);
                 seqRobot++;
                 break;
-            }
+
 
             case 18:
-                telemetry.addData("18", true);
-                telemetry.update();
-            {
+
+            telemetry.addData("18", true);
+            telemetry.update();
                 if (rangeSensorF.cmUltrasonic() > 22) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(.1);
                     motorRightB.setPower(.1);
-                } else {
-                    sleep(750);
-                    seqRobot++;
-                    break;
                 }
-            }
+                slp(750);
+                seqRobot++;
+                break;
+
 
             case 20:
-            {
+
                 telemetry.addData("20", true);
                 telemetry.update();
                 servoGlyph1.setPosition(GLYPH_1_RELEASE);
                 servoGlyph2.setPosition(GLYPH_2_RELEASE);
-                sleep(500);
+                slp(500);
                 seqRobot++;
                 break;
-            }
+
 
             case 21:
-            {
+
                 telemetry.addData("21", true);
                 telemetry.update();
                 if (rangeSensorF.cmUltrasonic() < 5){
@@ -483,23 +464,23 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorLeftB.setPower(-.2);
                     motorRightB.setPower(-.2);
                 }
-                else
-                {
+                else {
                     motorLeftA.setPower(0);
                     motorRightA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightB.setPower(0);
-                    sleep(750);
-                    seqRobot++;
-                    break;
                 }
-            }
+                slp(750);
+                seqRobot++;
+                break;
+
+
 
             case 23:
-            {
+
                 telemetry.addData("23", true);
                 telemetry.update();
-                if (gyro < 90.25 || gyro > 89.75) {
+                if (gyro() < 90.25 || gyro() > 89.75) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
                     motorRightA.setPower(0);
@@ -510,10 +491,10 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
                     motorRightA.setPower(-.1);
                     motorRightB.setPower(-.1);
                 }
-                sleep(1000);
+                slp(1000);
                 seqRobot++;
                 break;
-            }
+
             case 99:  // Done
             {
                 break;
@@ -525,4 +506,11 @@ public class CyberRelicBlueFront extends CyberRelicAbstract{
             }
         }
         }
+    private void slp(int slptime) {
+        try {
+            sleep(slptime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     }

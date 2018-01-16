@@ -11,7 +11,7 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.hardware.GyroSensor;
         import com.qualcomm.robotcore.hardware.LightSensor;
         import com.qualcomm.robotcore.hardware.Servo;
-        import static android.os.SystemClock.sleep;
+        import static java.lang.Thread.sleep;
 
         import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -27,15 +27,12 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Set Servos
     protected Servo
-            servoGlyph1, servoGlyph2;
+            servoGlyph1, servoGlyph2,servoGem;
 
     protected ColorSensor
             colorSensor;
 
     BNO055IMU imu;
-
-    protected CRServo
-            servoGem;
 
     protected DcMotor
             motorLeftA, motorLeftB,
@@ -141,7 +138,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
 
-        servoGem = hardwareMap.crservo.get(SERVO_GEM);
+        servoGem = hardwareMap.servo.get(SERVO_GEM);
 
         //gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
 
@@ -156,11 +153,9 @@ public abstract class CyberRelicAbstract extends OpMode {
         imu.initialize(parameters);
 
         servoGlyph1.setPosition(0.33);
-        servoGlyph2.setPosition(0.97);
+        servoGlyph2.setPosition(0.87);
 
         seqRobot = 1;
-
-        gyro = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         bDirection = true;
     } // End OpMode Initialization Method
@@ -188,34 +183,8 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorGlyphLift.setPower(0);
     } // End OpMode Stop Method
 
-    public void gemDown()
-    {
-        //Set the amount of time we need the servo to run out for to the current time + PUSHER_RUN_TIME constant.
-        long inTime = System.currentTimeMillis() + GEM_RUN_TIME + 250;
-        servoGem.setPower(-1); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
-
-        //While the timer hasn't reached outTime, have the servo run forward.
-        while (System.currentTimeMillis() < inTime)
-        {
-            telemetry.addData("Time", System.currentTimeMillis());
-            telemetry.addData("inTime", inTime);
-            telemetry.update();
-            sleep(10);
-        }
-        servoGem.setPower(0);
-    }
-
-    public void gemUp()
-    {
-        //Set the amount of time we need the servo to run out for to the current time + PUSHER_RUN_TIME constant.
-        long outTime = System.currentTimeMillis() + GEM_RUN_TIME;
-
-        //While the timer hasn't reached outTime, have the servo run forward.
-        while (System.currentTimeMillis() < outTime)
-        {
-            servoGem.setPower(-1); //Keep in mind that this is a vex motor, so this command is equivalent to setting a motors power to 1.
-        }
-        servoGem.setPower(0);
+    double gyro() {
+        return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
     //------------------------------------------------------------------

@@ -35,7 +35,7 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.Range;
-        import static android.os.SystemClock.sleep;
+        import static java.lang.Thread.sleep;
         import com.qualcomm.hardware.bosch.BNO055IMU;
 
         import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -63,10 +63,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         bDirection = true;
         grabbed = false;
         colorSensor.enableLed(false);
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+
     }
 
     @Override
@@ -82,7 +79,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
 
         // Set controls
         velocityDrive = -gamepad1.left_stick_y;
-        strafeDrive = gamepad1.left_stick_x;
+        strafeDrive = -gamepad1.left_stick_x;
         rotationDrive = -gamepad1.right_stick_x;
 
         //Field-Oriented drive code
@@ -181,12 +178,12 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         if (gamepad1.dpad_up)
         {
             bDirection = true; // Arm is front.
-            sleep(500);
+            slp(500);
         }
         if (gamepad1.dpad_down)
         {
             bDirection = false; // Collection is front
-            sleep(500);
+            slp(500);
         }
 
         if (fieldOrient)
@@ -198,12 +195,12 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         if (gamepad2.x && !grabbed)
         {
             grabbed = true;
-            sleep(500);
+            slp(500);
         }
         else if (gamepad2.x && grabbed)
         {
             grabbed = false;
-            sleep(500);
+            slp(500);
         }
 /*
         if (gamepad2.y)
@@ -268,7 +265,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         servoGlyph1.setPosition(GLYPH_1_RELEASE);
         servoGlyph2.setPosition(GLYPH_2_RELEASE);
     }
-        if((motorGlyphLift.getCurrentPosition() >= -3200) ||(gamepad2.left_stick_y > 0)){
+        if((motorGlyphLift.getCurrentPosition() >= -18500) ||(gamepad2.left_stick_y > 0)){
             //Controls for lifting the glyph
             //Set controls for lift
             throttleLift = gamepad2.left_stick_y;
@@ -282,7 +279,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
                 gamepad2.left_stick_y = 0;
             }
 
-            if ((motorGlyphLift.getCurrentPosition() <= 1500) && (gamepad2.left_stick_y > 0)){
+            if ((motorGlyphLift.getCurrentPosition() >= -1500) && (gamepad2.left_stick_y > 0)){
                 throttleLift = Range.clip(throttleLift, -0.125f, 0.125f);
             }else{
                 throttleLift = Range.clip(throttleLift, -0.25f, 0.25f);
@@ -301,6 +298,13 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
 
 
 // End OpMode Loop Method
+    }
+    private void slp(int slptime) {
+        try {
+            Thread.sleep(slptime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void stop ()
