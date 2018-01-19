@@ -263,6 +263,23 @@ public abstract class CyberRelicAbstract extends OpMode {
         return ((currentPos >= (target - delta)) && (currentPos <= (target + delta)));
     }
 
+    char seeJewel(int redVal, int blueVal, float hueVal)
+    {
+        {
+            if (redVal > blueVal)
+            {
+                return 'R';
+            }
+            else if (blueVal > redVal)
+            {
+                return 'B';
+            }
+            else
+            {
+                return 'N';
+            }
+        }
+    }
 
 
     //------------------------------------------------------------------

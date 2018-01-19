@@ -81,7 +81,7 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
                 telemetry.update();
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
-                servoGem.setPosition(0);
+                servoGem.setPosition(0.97);
                 //slp(1000);  Setpoints are not written until the end of the loop. Don't use sleep methods in iterative opModes
                 if(timer.milliseconds() > 1000) {
                     seqRobot++;
@@ -93,11 +93,14 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
             case 3:
                 telemetry.addData("3", true);
                 telemetry.addData("Time", System.currentTimeMillis());
+                telemetry.addData("Sensor Sees: ", seeJewel(colorSensor.red(), colorSensor.blue(), hsvValues[0]));
+                telemetry.addData("RedVal", colorSensor.red());
+                telemetry.addData("BlueVal", colorSensor.blue());
                 telemetry.update();
                 colorSensor.getClass();
 
                 if (colorSensor.red() >= colorSensor.blue()) {
-                    if(gyro() > 180 && gyro() < 350){
+                    if(gyro() > 180 && gyro() < 330){
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
@@ -111,7 +114,7 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
                 }
 
                 if (colorSensor.blue() >= colorSensor.red()) {
-                    if (gyro() < 10) {
+                    if (gyro() < 30) {
                         motorLeftA.setPower(.1);
                         motorLeftB.setPower(.1);
                         motorRightA.setPower(-.1);
@@ -119,7 +122,7 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
                     }
                 }
                 //slp(750);
-                if(timer.milliseconds() > 750) {
+                if(timer.milliseconds() > 1750) {
                     seqRobot++;
                     timer.reset();
                 }
@@ -129,7 +132,7 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
                 telemetry.addData("4", true);
                 telemetry.addData("Time", System.currentTimeMillis());
                 telemetry.update();
-                servoGem.setPosition(0.66);
+                servoGem.setPosition(0.07);
 
                 if (gyro() < 1 && gyro() > 359) {
                     motorLeftA.setPower(0);
