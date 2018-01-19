@@ -41,8 +41,7 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
             pulseCaseMoveDone, // Case move complete pulse
-            red,
-            blue,
+            red,blue,
             fieldOrient,
             bDirection,
             grabbed,
@@ -224,26 +223,6 @@ public abstract class CyberRelicAbstract extends OpMode {
 
         return target;
     }
-
-    char seeBeacon(int redVal, int blueVal, float hueVal)
-    {
-        {
-            if (redVal > 2 && hueVal <= 0)
-            {
-                return 'R';
-            }
-            else if (blueVal > 2 && hueVal > 200)
-            {
-                return 'B';
-            }
-            else
-            {
-                return 'N';
-            }
-        }
-    }
-
-
 
     // cmdMoveA Method
     // Convert desired distance from inches to encoder counts, establish new motor target, and set
