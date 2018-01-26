@@ -7,8 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Steve on 8/28/2017.
  */
 
-public abstract class TestAbstract extends OpMode {
+public abstract class
+TestAbstract extends OpMode {
 
+    final static String
+            MOTOR_TEST = "test";
     protected DcMotor
     motorTest;
 
@@ -23,9 +26,6 @@ public abstract class TestAbstract extends OpMode {
 
     public void loop(){
     }
-
-    final static String
-            MOTOR_TEST = "test";
 
     public void stop(){
 

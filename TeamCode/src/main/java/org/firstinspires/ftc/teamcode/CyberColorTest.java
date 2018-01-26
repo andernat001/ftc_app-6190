@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -41,6 +42,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  * a certain the light sensor receives on certain surfaces
  */
 @TeleOp(name = "ColorTest")
+@Disabled
 public class CyberColorTest extends OpMode
 {
 	LightSensor colorSensor;

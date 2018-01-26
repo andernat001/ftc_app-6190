@@ -1,100 +1,45 @@
-
 package org.firstinspires.ftc.teamcode;
 
-        import com.qualcomm.hardware.bosch.BNO055IMU;
-        import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.hardware.CRServo;
-        import com.qualcomm.robotcore.hardware.ColorSensor;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.DcMotorSimple;
-        import com.qualcomm.robotcore.hardware.GyroSensor;
-        import com.qualcomm.robotcore.hardware.LightSensor;
-        import com.qualcomm.robotcore.hardware.Servo;
-        import static java.lang.Thread.sleep;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-public abstract class CyberRelicAbstract extends OpMode {
+/**
+ * Created by Steve on 1/29/2018.
+ */
 
-    // Establish Integer Constants
-    final static int
-            GEM_RUN_TIME = 1000,
-            INC_VAL = 10;
+public abstract class CyberSpringAbstract extends OpMode {
 
-    //protected GyroSensor
-           // gyroSensor;
-    // Establish Float Constants
-    final static float
-    GLYPH_1_GRAB = 0.97f,
-    GLYPH_2_GRAB = 0.30f,
-    GLYPH_1_RELEASE = 0.61f,
-    GLYPH_2_RELEASE = 0.75f;
-    // Establish Double Constants
-    final static double
-            DELAY_DRV_MOV_DONE = 0.1d,        // Hold/wait 0.1s after drive train move complete (seconds)
-            ENCODER_CNT_PER_IN_DRIVE = 59.41979167d; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
     // Establish Controller and Device String Constants
     // These names need to match the Robot Controller configuration file device names.
     final static String
-
-            MOTOR_DRIVE_LEFT_A = "leftA",
-            MOTOR_DRIVE_LEFT_B = "leftB",
-            MOTOR_DRIVE_RIGHT_A = "rightA",
-            MOTOR_DRIVE_RIGHT_B = "rightB",
-            SENSOR_COLOR = "color",
-            //SENSOR_GYRO = "gyro",
-            GLYPH_LEFT = "gLeft",
-            GLYPH_RIGHT = "gRight",
-            GLYPH_LIFT = "gLift",
-            RELIC_ARM = "relic",
-            RELIC_CLAW = "rClaw",
-            SERVO_GEM = "gem";
-    protected ModernRoboticsI2cRangeSensor
-            rangeSensor,rangeSensorF,rangeSensorB;
-    // Set Servos
-    protected Servo
-            servoGlyph1, servoGlyph2,servoGem,
-            servoRelicClaw;
-    protected ColorSensor
-            colorSensor;
-    // Auto: Values used to determine current color detected
+            MOTOR_DRIVE_LEFT = "left",
+            MOTOR_DRIVE_RIGHT = "right";
     protected DcMotor
-            motorLeftA, motorLeftB,
-            motorRightA, motorRightB,
-            motorRelicArm,
-            motorGlyphLift;
+            motorRight,motorLeft;
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
-            pulseCaseMoveDone, // Case move complete pulse
-            red,blue,
-            fieldOrient,
-            bDirection,
-            grabbed,
-            leftCol,centerCol,rightCol;
+            pulseCaseMoveDone; // Case move complete pulse
+
+    // Auto: Values used to determine current color detected
     protected float
             targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
             targetDrRotateDeg,
             hsvValues[] = {0F, 0F, 0F},
-            powerLeftA, powerLeftB,
-            powerRightA, powerRightB,
-            velocityDrive, strafeDrive, rotationDrive,
-            throttleLift, throttleArm,
-            gem,
-            claw,
-            glyph1,glyph2;
+            powerRight,powerLeft,
+            velocityDrive, rotationDrive;
     protected double
-            targetPower, // General motor power variable (%, -1.0 to 1.0)
-            temp, gyro,
-            x,y,
-            tbd;
+            targetPower; // General motor power variable (%, -1.0 to 1.0)
     // Establish Integer Variables
     protected int
-            seqRobot, target, // Switch operation integer used to identify sequence step.
-            targetPosLeftA, targetPosLeftB,
-            targetPosRightA, targetPosRightB;      // Drive train motor target variables (encoder counts)
-    BNO055IMU imu;
+            seqRobot;
 
     static double scaleInput(double dVal)
     {
@@ -136,59 +81,17 @@ public abstract class CyberRelicAbstract extends OpMode {
     //------------------------------------------------------------------
     @Override
     public void init() {
+        motorLeft = hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT);
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLeft.setDirection(DcMotor.Direction.FORWARD);
+
+        motorRight = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT);
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
+
         // Get references to dc motors and set initial mode and direction
         // It appears all encoders are reset upon robot startup, but just in case, set all motor
         // modes to Stop-And-Reset-Encoders during initialization.
-        motorLeftA = hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT_A);
-        motorLeftA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeftA.setDirection(DcMotor.Direction.FORWARD);
-
-        motorLeftB = hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT_B);
-        motorLeftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeftB.setDirection(DcMotor.Direction.FORWARD);
-
-        motorRightA = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT_A);
-        motorRightA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightA.setDirection(DcMotor.Direction.REVERSE);
-
-        motorRightB = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT_B);
-        motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightB.setDirection(DcMotor.Direction.REVERSE);
-
-        motorGlyphLift = hardwareMap.dcMotor.get(GLYPH_LIFT);
-        motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
-
-        motorRelicArm = hardwareMap.dcMotor.get(RELIC_ARM);
-        motorRelicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRelicArm.setDirection(DcMotor.Direction.FORWARD);
-
-        servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
-
-        servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
-
-        servoRelicClaw = hardwareMap.servo.get(RELIC_CLAW);
-
-        servoGem = hardwareMap.servo.get(SERVO_GEM);
-
-        //gyroSensor = hardwareMap.gyroSensor.get(SENSOR_GYRO);
-
-        colorSensor = hardwareMap.colorSensor.get(SENSOR_COLOR);
-        rangeSensorF = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeF");
-        rangeSensorB = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeB");
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        servoGlyph1.setPosition(0.33);
-        servoGlyph2.setPosition(0.87);
-
-        seqRobot = 1;
-
-        bDirection = true;
     } // End OpMode Initialization Method
 
     //------------------------------------------------------------------
@@ -199,35 +102,20 @@ public abstract class CyberRelicAbstract extends OpMode {
     {
     }
 
+
+    //------------------------------------------------------------------
+    // Miscellaneous Methods
+    //------------------------------------------------------------------
+
     //------------------------------------------------------------------
     // Stop Method
     //------------------------------------------------------------------
     @Override
     public void stop()
     {    // stop all the motors when the program is stopped
-        motorRightA.setPower(0);
-        motorRightB.setPower(0);
-        motorLeftA.setPower(0);
-        motorLeftB.setPower(0);
-        motorGlyphLift.setPower(0);
-        motorRelicArm.setPower(0);
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     } // End OpMode Stop Method
-
-    double gyro() {
-        return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-    }
-
-    double rangeF(){
-        return rangeSensorF.cmUltrasonic();
-    }
-
-    //------------------------------------------------------------------
-    // Miscellaneous Methods
-    //------------------------------------------------------------------
-
-    double rangeB(){
-        return rangeSensorB.cmUltrasonic();
-    }
 
     // cmdMoveR Method
     // Convert desired distance from inches to encoder counts, establish new motor target, and set
@@ -296,13 +184,6 @@ public abstract class CyberRelicAbstract extends OpMode {
         return target;
     }
 
-    boolean chkMove(DcMotor motor, int target, int delta)
-    {
-        int currentPos = motor.getCurrentPosition();
-        return ((currentPos >= (target - delta)) && (currentPos <= (target + delta)));
-    }
-
-
     //------------------------------------------------------------------
     // Miscellaneous Methods
     //------------------------------------------------------------------
@@ -313,22 +194,10 @@ public abstract class CyberRelicAbstract extends OpMode {
     //	scaled value is less than linear.  This is to make it easier to drive
     //	the robot more precisely at slower speeds.
 
-    char seeJewel(int redVal, int blueVal, float hueVal)
+    boolean chkMove(DcMotor motor, int target, int delta)
     {
-        {
-            if (redVal > blueVal)
-            {
-                return 'R';
-            }
-            else if (blueVal > redVal)
-            {
-                return 'B';
-            }
-            else
-            {
-                return 'N';
-            }
-        }
+        int currentPos = motor.getCurrentPosition();
+        return ((currentPos >= (target - delta)) && (currentPos <= (target + delta)));
     }
 
 

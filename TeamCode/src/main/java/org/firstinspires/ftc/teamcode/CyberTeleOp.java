@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -55,22 +56,22 @@ import com.qualcomm.robotcore.util.Range;
  * ------------------------------------------------------------------
  */
 @TeleOp(name = "Teleop")
+@Disabled
 public class CyberTeleOp extends CyberAbstractOpMode {
-    // Set Additional Boolean Variables
-    boolean bDirection;                      // Flags fwd/rev drive train operation (1 = Arm is front; 0 = Collection is front)
-    //boolean lStatus;
-
-    double dBucketPosition;
-    int iScoopPosition;
     final static double
             BUCKET_LOAD_POSITION = 0.5,
             BUCKET_LEFT_POSITION = 0.25,
             BUCKET_RIGHT_POSITION = 0.75,
             BUCKET_DELTA = 0.015;
+    //boolean lStatus;
     final static int
             SCOOP_LOAD_POS = 0,
             SCOOP_DOWN_POS = 420,
             SCOOP_DEL = 10;
+    // Set Additional Boolean Variables
+    boolean bDirection;                      // Flags fwd/rev drive train operation (1 = Arm is front; 0 = Collection is front)
+    double dBucketPosition;
+    int iScoopPosition;
     //------------------------------------------------------------------
     // Constructor Method  (Not Used)
     //------------------------------------------------------------------
