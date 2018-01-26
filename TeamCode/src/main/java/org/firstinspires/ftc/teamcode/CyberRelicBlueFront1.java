@@ -79,8 +79,8 @@ public class CyberRelicBlueFront1 extends CyberRelicAbstract{
                 telemetry.update();
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
-                servoGem.setPosition(1);
-                motorGlyphLift.setTargetPosition(-7500);
+                servoGem.setPosition(.9);
+                motorGlyphLift.setTargetPosition(-3500);
                 motorGlyphLift.setPower(.25);
                 //slp(1000);  Setpoints are not written until the end of the loop. Don't use sleep methods in iterative opModes
                 if(timer.milliseconds() > 1000) {

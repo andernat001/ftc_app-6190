@@ -279,7 +279,7 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
                 gamepad2.left_stick_y = 0;
             }
 
-            if ((motorGlyphLift.getCurrentPosition() >= -1500) && (gamepad2.left_stick_y > 0)){
+            if ((motorGlyphLift.getCurrentPosition() >= -15000) && (gamepad2.left_stick_y > 0)){
                 throttleLift = Range.clip(throttleLift, -0.125f, 0.125f);
             }else{
                 throttleLift = Range.clip(throttleLift, -0.25f, 0.25f);
@@ -289,11 +289,40 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
             motorGlyphLift.setPower(0);
         }
 
+        if (gamepad2.y)
+        {
+            if (gem < 180)
+            {
+                gem = gem + INC_VAL;
+            }
+            else
+            {
+                gem = 180;
+            }
+            servoGem.setPosition(gem/180);
+            slp(100);
+
+        }
+
+        if (gamepad2.a)
+        {
+            if (gem > 0)
+            {
+                gem = gem - INC_VAL;
+            }
+            else
+            {
+                gem = 0;
+            }
+            servoGem.setPosition(gem/180);
+            slp(100);
+        }
 
         telemetry.addData("Lift", motorGlyphLift.getCurrentPosition());
         telemetry.addData("Glyph1", servoGlyph1.getPosition());
         telemetry.addData("Glyph2", servoGlyph2.getPosition());
         telemetry.addData("y-axis", gamepad2.left_stick_y);
+        telemetry.addData("Gem", servoGem.getPosition());
         telemetry.update();
 
 

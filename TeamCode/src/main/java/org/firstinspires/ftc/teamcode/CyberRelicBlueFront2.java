@@ -81,6 +81,11 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                 parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
                 this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
+                if(timer.milliseconds() > 500) {
+                    seqRobot++;
+                    timer.reset();
+                }
+
                 VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
                 VuforiaTrackable relicTemplate = relicTrackables.get(0);
                 relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
@@ -104,10 +109,6 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                         leftCol = false;
                         centerCol = false;
                         rightCol = true;
-                    } else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-                        leftCol = true;
-                        centerCol = false;
-                        leftCol = false;
                     }
 
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
@@ -127,11 +128,14 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                         double rZ = rot.thirdAngle;
                     }
                 } else {
+                    leftCol = true;
+                    centerCol = false;
+                    rightCol = false;
                     telemetry.addData("VuMark", "not visible");
                 }
                 telemetry.addData("2", true);
                 telemetry.update();
-                if(timer.milliseconds() > 1250) {
+                if(timer.milliseconds() > ) {
                     seqRobot++;
                     timer.reset();
                 }
@@ -227,7 +231,7 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    }else if (rangeSensorB.cmUltrasonic() > 115){
+                    }else if (rangeSensorB.cmUltrasonic() > 112){
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -242,7 +246,7 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    }else if (rangeSensorB.cmUltrasonic() > 132){
+                    }else if (rangeSensorB.cmUltrasonic() > 129){
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -257,7 +261,7 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
                         motorRightB.setPower(.05);
-                    }else if (rangeSensorB.cmUltrasonic() > 148){
+                    }else if (rangeSensorB.cmUltrasonic() > 145){
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
