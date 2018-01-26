@@ -255,16 +255,62 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         }
 
 */
+        if (gamepad2.left_bumper)
+        {
+            if (claw < 180)
+            {
+                claw = claw + INC_VAL;
+            }
+            else
+            {
+                claw = 180;
+            }
+            servoRelicClaw.setPosition(claw/180);
+            slp(100);
+
+        }
+
+
+        if (gamepad2.right_bumper)
+        {
+            if (claw > 0)
+            {
+                claw = claw - INC_VAL;
+            }
+            else
+            {
+                claw = 0;
+            }
+            servoRelicClaw.setPosition(claw/180);
+            slp(100);
+        }
+
+        if (gamepad2.a){
+            if (gem < 180)
+            {
+                gem = gem + INC_VAL;
+            }
+            else
+            {
+                gem = 180;
+            }
+            servoGem.setPosition(gem/180);
+            slp(100);
+        }
+
         if (grabbed)
         {
         servoGlyph1.setPosition(GLYPH_1_GRAB);
         servoGlyph2.setPosition(GLYPH_2_GRAB);
-    }
+        }
         if (!grabbed)
         {
         servoGlyph1.setPosition(GLYPH_1_RELEASE);
         servoGlyph2.setPosition(GLYPH_2_RELEASE);
-    }
+        }
+
+
+
         if((motorGlyphLift.getCurrentPosition() >= -18500) ||(gamepad2.left_stick_y > 0)){
             //Controls for lifting the glyph
             //Set controls for lift
@@ -288,6 +334,25 @@ public class CyberRelicTeleOp extends CyberRelicAbstract {
         else {
             motorGlyphLift.setPower(0);
         }
+
+
+            //Controls for lifting the glyph
+            //Set controls for lift
+            throttleArm = -gamepad2.right_stick_y;
+            // Scale the throttle, and then set motor power.
+            throttleArm = (float) scaleInput(throttleArm);
+            if (gamepad2.right_stick_y > .1) {
+                motorRelicArm.setPower(throttleArm);
+            }else{
+                motorRelicArm.setPower(0);
+            }
+
+            //Create dead-zone for lift control
+            if (gamepad2.right_stick_y <= 0.05 && gamepad2.right_stick_y >= -0.05)
+            {
+                gamepad2.right_stick_y = 0;
+            }
+
 
         if (gamepad2.y)
         {

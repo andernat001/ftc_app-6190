@@ -70,8 +70,8 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 servoGlyph1.setPosition(GLYPH_1_GRAB);
                 servoGlyph2.setPosition(GLYPH_2_GRAB);
                 servoGem.setPosition(.9);
-                motorGlyphLift.setTargetPosition(-3500);
-                motorGlyphLift.setPower(.5);
+                motorGlyphLift.setTargetPosition(-2500);
+                motorGlyphLift.setPower(.75);
                 //slp(1000);  Setpoints are not written until the end of the loop. Don't use sleep methods in iterative opModes
                 if (timer.milliseconds() > 1000) {
                     seqRobot++;
@@ -91,11 +91,11 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 colorSensor.getClass();
 
                 if (colorSensor.red() >= colorSensor.blue()) {
-                    if (rangeSensorB.cmUltrasonic() > 30) {
-                        motorLeftA.setPower(-.5);
-                        motorLeftB.setPower(-.5);
-                        motorRightA.setPower(-.5);
-                        motorRightB.setPower(-.5);
+                    if (timer.milliseconds() > 500) {
+                        motorLeftA.setPower(-.25);
+                        motorLeftB.setPower(-.25);
+                        motorRightA.setPower(-.25);
+                        motorRightB.setPower(-.25);
                     } else {
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
@@ -118,11 +118,11 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 }
 
                 if (colorSensor.blue() >= colorSensor.red()) {
-                    if (rangeSensorB.cmUltrasonic() > 53) {
-                        motorLeftA.setPower(.5);
-                        motorLeftB.setPower(.5);
-                        motorRightA.setPower(.5);
-                        motorRightB.setPower(.5);
+                    if (timer.milliseconds() > 500) {
+                        motorLeftA.setPower(.25);
+                        motorLeftB.setPower(.25);
+                        motorRightA.setPower(.25);
+                        motorRightB.setPower(.25);
                     } else {
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
@@ -138,17 +138,20 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                     }
                     */
                 }
-                if (timer.milliseconds() > 1750) {
-                    seqRobot++;
-                    timer.reset();
+
+                if (timer.milliseconds() > 350){
+                    servoGem.setPosition(.05);
                 }
+
+                seqRobot++;
+                timer.reset();
                 break;
 
             case 4:
                 telemetry.addData("4", true);
                 telemetry.addData("Time", System.currentTimeMillis());
                 telemetry.update();
-                servoGem.setPosition(.1);
+                servoGem.setPosition(.05);
 /*
                 if (gyro() < 1 && gyro() > 359) {
                     motorLeftA.setPower(0);
@@ -348,13 +351,13 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 telemetry.addData("10", true);
                 telemetry.update();
                 if (leftCol) {
-                    if (rangeSensorB.cmUltrasonic() < 110) {
+                    if (rangeB() < 110) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
                     }
-                    if (rangeSensorB.cmUltrasonic() > 111) {
+                    if (rangeB() > 111) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -363,13 +366,13 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 }
 
                 if (centerCol) {
-                    if (rangeSensorB.cmUltrasonic() < 127.5) {
+                    if (rangeB() < 127.5) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
                     }
-                    if (rangeSensorB.cmUltrasonic() >= 128.5) {
+                    if (rangeB() >= 128.5) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -378,12 +381,12 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 }
 
                 if (rightCol) {
-                    if (rangeSensorB.cmUltrasonic() < 143) {
+                    if (rangeB() < 143) {
                         motorLeftA.setPower(.25);
                         motorLeftB.setPower(.25);
                         motorRightA.setPower(.25);
                         motorRightB.setPower(.25);
-                    } else if (rangeSensorB.cmUltrasonic() > 144) {
+                    } else if (rangeB() > 144) {
                         motorLeftA.setPower(-.05);
                         motorLeftB.setPower(-.05);
                         motorRightA.setPower(-.05);
@@ -430,7 +433,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
 
                 if (leftCol) {
 
-                    if (rangeSensorB.cmUltrasonic() < 110) {
+                    if (rangeB() < 110) {
                         motorLeftA.setPower(.05);
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
@@ -440,7 +443,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 }
 
                 if (centerCol) {
-                    if (rangeSensorB.cmUltrasonic() < 127) {
+                    if (rangeB() < 127) {
                         motorLeftA.setPower(.05);
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
@@ -449,7 +452,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
                 }
 
                 if (rightCol) {
-                    if (rangeSensorB.cmUltrasonic() < 143) {
+                    if (rangeB() < 143) {
                         motorLeftA.setPower(.05);
                         motorLeftB.setPower(.05);
                         motorRightA.setPower(.05);
@@ -491,7 +494,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
 
             telemetry.addData("18", true);
             telemetry.update();
-                if (rangeSensorF.cmUltrasonic() > 22) {
+                if (rangeF() > 22) {
                     motorLeftA.setPower(.1);
                     motorLeftB.setPower(.1);
                     motorRightA.setPower(.1);
@@ -509,8 +512,8 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
 
                 telemetry.addData("20", true);
                 telemetry.update();
-                servoGlyph1.setPosition(GLYPH_1_RELEASE);
-                servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                //servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                //servoGlyph2.setPosition(GLYPH_2_RELEASE);
                 if(timer.milliseconds() > 500) {
                     seqRobot++;
                     timer.reset();
@@ -523,7 +526,7 @@ public class CyberRelicBlueFront extends CyberRelicAbstract {
 
                 telemetry.addData("21", true);
                 telemetry.update();
-                if (rangeSensorF.cmUltrasonic() < 5){
+                if (rangeF() < 5){
                     motorLeftA.setPower(-.2);
                     motorRightA.setPower(-.2);
                     motorLeftB.setPower(-.2);

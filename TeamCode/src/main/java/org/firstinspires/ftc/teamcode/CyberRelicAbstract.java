@@ -27,7 +27,8 @@ public abstract class CyberRelicAbstract extends OpMode {
 
     // Set Servos
     protected Servo
-            servoGlyph1, servoGlyph2,servoGem;
+            servoGlyph1, servoGlyph2,servoGem,
+            servoRelicClaw;
 
     protected ColorSensor
             colorSensor;
@@ -37,6 +38,7 @@ public abstract class CyberRelicAbstract extends OpMode {
     protected DcMotor
             motorLeftA, motorLeftB,
             motorRightA, motorRightB,
+            motorRelicArm,
             motorGlyphLift;
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
@@ -54,8 +56,9 @@ public abstract class CyberRelicAbstract extends OpMode {
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
             velocityDrive, strafeDrive, rotationDrive,
-            throttleLift,
+            throttleLift, throttleArm,
             gem,
+            claw,
             glyph1,glyph2;
     // Auto: Values used to determine current color detected
 
@@ -75,7 +78,7 @@ public abstract class CyberRelicAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             GEM_RUN_TIME = 1000,
-            INC_VAL = 5;
+            INC_VAL = 10;
     // Establish Float Constants
     final static float
     GLYPH_1_GRAB = 0.97f,
@@ -101,6 +104,8 @@ public abstract class CyberRelicAbstract extends OpMode {
             GLYPH_LEFT = "gLeft",
             GLYPH_RIGHT = "gRight",
             GLYPH_LIFT = "gLift",
+            RELIC_ARM = "relic",
+            RELIC_CLAW = "rClaw",
             SERVO_GEM = "gem";
 
 
@@ -133,9 +138,15 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorGlyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorGlyphLift.setDirection(DcMotor.Direction.FORWARD);
 
+        motorRelicArm = hardwareMap.dcMotor.get(RELIC_ARM);
+        motorRelicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRelicArm.setDirection(DcMotor.Direction.FORWARD);
+
         servoGlyph1 = hardwareMap.servo.get(GLYPH_LEFT);
 
         servoGlyph2 = hardwareMap.servo.get(GLYPH_RIGHT);
+
+        servoRelicClaw = hardwareMap.servo.get(RELIC_CLAW);
 
         servoGem = hardwareMap.servo.get(SERVO_GEM);
 
@@ -180,10 +191,19 @@ public abstract class CyberRelicAbstract extends OpMode {
         motorLeftA.setPower(0);
         motorLeftB.setPower(0);
         motorGlyphLift.setPower(0);
+        motorRelicArm.setPower(0);
     } // End OpMode Stop Method
 
     double gyro() {
         return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+    }
+
+    double rangeF(){
+        return rangeSensorF.cmUltrasonic();
+    }
+
+    double rangeB(){
+        return rangeSensorB.cmUltrasonic();
     }
 
     //------------------------------------------------------------------

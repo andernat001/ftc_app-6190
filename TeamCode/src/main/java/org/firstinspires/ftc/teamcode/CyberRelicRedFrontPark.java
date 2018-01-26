@@ -24,8 +24,8 @@ import static java.lang.Thread.sleep;
  * Created by Steve on 11/11/2017.
  */
 
-@Autonomous(name = "RelicRedFront", group = "RiderModes")
-public class CyberRelicRedFront extends CyberRelicAbstract {
+@Autonomous(name = "RelicRedFrontPark", group = "RiderModes")
+public class CyberRelicRedFrontPark extends CyberRelicAbstract {
 
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  //Added so opMode does not sleep
 
@@ -95,7 +95,7 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
                 colorSensor.getClass();
 
                 if (colorSensor.blue() >= colorSensor.red()) {
-                    if (timer.milliseconds() > 500) {
+                    if (timer.milliseconds() > 850) {
                         motorLeftA.setPower(-.25);
                         motorLeftB.setPower(-.25);
                         motorRightA.setPower(-.25);
@@ -146,8 +146,8 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
                 if (timer.milliseconds() > 350) {
                     servoGem.setPosition(0.05);
                 }
-                    seqRobot += 4;
-                    timer.reset();
+                seqRobot += 4;
+                timer.reset();
                 break;
             case 4:
                 //gemUp();
@@ -277,236 +277,236 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
                 break;
             }*/
 
-        case 8:
-        if (gyro() < 181 || gyro() > 179) {
-            motorLeftA.setPower(0);
-            motorLeftB.setPower(0);
-            motorRightA.setPower(0);
-            motorRightB.setPower(0);
-        } else if (gyro() > 181 && gyro() < 360) {
-            motorLeftA.setPower(-.1);
-            motorLeftB.setPower(-.1);
-            motorRightA.setPower(.1);
-            motorRightB.setPower(.1);
-        } else if (gyro() < 18179 && gyro() > 0) {
-            motorLeftA.setPower(.1);
-            motorLeftB.setPower(.1);
-            motorRightA.setPower(-.1);
-            motorRightB.setPower(-.1);
+            case 8:
+                if (gyro() < 181 || gyro() > 179) {
+                    motorLeftA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightA.setPower(0);
+                    motorRightB.setPower(0);
+                } else if (gyro() > 181 && gyro() < 360) {
+                    motorLeftA.setPower(-.1);
+                    motorLeftB.setPower(-.1);
+                    motorRightA.setPower(.1);
+                    motorRightB.setPower(.1);
+                } else if (gyro() < 18179 && gyro() > 0) {
+                    motorLeftA.setPower(.1);
+                    motorLeftB.setPower(.1);
+                    motorRightA.setPower(-.1);
+                    motorRightB.setPower(-.1);
+                }
+                if (timer.milliseconds() > 750) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 10:
+                if (rightCol) {
+                    if (rangeB() < 110) {
+                        motorLeftA.setPower(.25);
+                        motorLeftB.setPower(.25);
+                        motorRightA.setPower(.25);
+                        motorRightB.setPower(.25);
+                    }
+                    if (rangeB() > 111) {
+                        motorLeftA.setPower(-.05);
+                        motorLeftB.setPower(-.05);
+                        motorRightA.setPower(-.05);
+                        motorRightB.setPower(-.05);
+                    }
+
+                }
+
+                if (centerCol) {
+                    if (rangeB() < 127.5) {
+                        motorLeftA.setPower(.25);
+                        motorLeftB.setPower(.25);
+                        motorRightA.setPower(.25);
+                        motorRightB.setPower(.25);
+                    }
+                    if (rangeB() >= 128.5) {
+                        motorLeftA.setPower(-.05);
+                        motorLeftB.setPower(-.05);
+                        motorRightA.setPower(-.05);
+                        motorRightB.setPower(-.05);
+                    }
+
+                }
+
+                if (leftCol) {
+                    if (rangeB() < 143) {
+                        motorLeftA.setPower(.25);
+                        motorLeftB.setPower(.25);
+                        motorRightA.setPower(.25);
+                        motorRightB.setPower(.25);
+                    } else if (rangeB() > 144) {
+                        motorLeftA.setPower(-.05);
+                        motorLeftB.setPower(-.05);
+                        motorRightA.setPower(-.05);
+                        motorRightB.setPower(-.05);
+                    }
+
+                }
+                if (timer.milliseconds() > 1000) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 12:
+                if (gyro() > 180 && gyro() < 360) {
+                    motorLeftA.setPower(-.1);
+                    motorLeftB.setPower(-.1);
+                    motorRightA.setPower(.1);
+                    motorRightB.setPower(.1);
+                } else if (gyro() < 180 && gyro() > 0) {
+                    motorLeftA.setPower(.1);
+                    motorLeftB.setPower(.1);
+                    motorRightA.setPower(-.1);
+                    motorRightB.setPower(-.1);
+                }
+                if (timer.milliseconds() > 500) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 14:
+
+                if (rightCol) {
+
+                    if (rangeB() < 110) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
+                    }
+                }
+
+
+                if (centerCol) {
+                    if (rangeB() < 127) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
+                    }
+                }
+
+                if (leftCol) {
+                    if (rangeB() < 143) {
+                        motorLeftA.setPower(.05);
+                        motorLeftB.setPower(.05);
+                        motorRightA.setPower(.05);
+                        motorRightB.setPower(.05);
+                    }
+                }
+                if (timer.milliseconds() > 750) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 16:
+
+                if (gyro() < 270) {
+                    motorLeftA.setPower(-.1);
+                    motorLeftB.setPower(-.1);
+                    motorRightA.setPower(.1);
+                    motorRightB.setPower(.1);
+                }
+                if (gyro() > 270) {
+                    motorLeftA.setPower(.1);
+                    motorLeftB.setPower(.1);
+                    motorRightA.setPower(-.1);
+                    motorRightB.setPower(-.1);
+                }
+                if (timer.milliseconds() > 750) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 18:
+
+                if (rangeF() > 22) {
+                    motorLeftA.setPower(.1);
+                    motorLeftB.setPower(.1);
+                    motorRightA.setPower(.1);
+                    motorRightB.setPower(.1);
+                }
+                if (timer.milliseconds() > 750) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 20:
+
+                //servoGlyph1.setPosition(GLYPH_1_RELEASE);
+                //servoGlyph2.setPosition(GLYPH_2_RELEASE);
+                if (timer.milliseconds() > 500) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 21:
+
+                if (rangeF() < 5) {
+                    motorLeftA.setPower(-.2);
+                    motorRightA.setPower(-.2);
+                    motorLeftB.setPower(-.2);
+                    motorRightB.setPower(-.2);
+                } else {
+                    motorLeftA.setPower(0);
+                    motorRightA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightB.setPower(0);
+                }
+                if (timer.milliseconds() > 750) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 23:
+
+                if (gyro() < 90.25 || gyro() > 89.75) {
+                    motorLeftA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightA.setPower(0);
+                    motorRightB.setPower(0);
+                } else {
+                    motorLeftA.setPower(.1);
+                    motorLeftB.setPower(.1);
+                    motorRightA.setPower(-.1);
+                    motorRightB.setPower(-.1);
+                }
+                if (timer.milliseconds() > 1000) {
+                    seqRobot++;
+                    timer.reset();
+                }
+                break;
+
+
+            case 99:  // Done
+            {
+                break;
+            }
+
+            default: {
+                break;
+            }
         }
-            if (timer.milliseconds() > 750) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 10:
-        if (rightCol) {
-            if (rangeB() < 110) {
-                motorLeftA.setPower(.25);
-                motorLeftB.setPower(.25);
-                motorRightA.setPower(.25);
-                motorRightB.setPower(.25);
-            }
-            if (rangeB() > 111) {
-                motorLeftA.setPower(-.05);
-                motorLeftB.setPower(-.05);
-                motorRightA.setPower(-.05);
-                motorRightB.setPower(-.05);
-            }
-
-        }
-
-        if (centerCol) {
-            if (rangeB() < 127.5) {
-                motorLeftA.setPower(.25);
-                motorLeftB.setPower(.25);
-                motorRightA.setPower(.25);
-                motorRightB.setPower(.25);
-            }
-            if (rangeB() >= 128.5) {
-                motorLeftA.setPower(-.05);
-                motorLeftB.setPower(-.05);
-                motorRightA.setPower(-.05);
-                motorRightB.setPower(-.05);
-            }
-
-        }
-
-        if (leftCol) {
-            if (rangeB() < 143) {
-                motorLeftA.setPower(.25);
-                motorLeftB.setPower(.25);
-                motorRightA.setPower(.25);
-                motorRightB.setPower(.25);
-            } else if (rangeB() > 144) {
-                motorLeftA.setPower(-.05);
-                motorLeftB.setPower(-.05);
-                motorRightA.setPower(-.05);
-                motorRightB.setPower(-.05);
-            }
-
-        }
-            if (timer.milliseconds() > 1000) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 12:
-        if (gyro() > 180 && gyro() < 360) {
-            motorLeftA.setPower(-.1);
-            motorLeftB.setPower(-.1);
-            motorRightA.setPower(.1);
-            motorRightB.setPower(.1);
-        } else if (gyro() < 180 && gyro() > 0) {
-            motorLeftA.setPower(.1);
-            motorLeftB.setPower(.1);
-            motorRightA.setPower(-.1);
-            motorRightB.setPower(-.1);
-        }
-            if (timer.milliseconds() > 500) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 14:
-
-        if (rightCol) {
-
-            if (rangeB() < 110) {
-                motorLeftA.setPower(.05);
-                motorLeftB.setPower(.05);
-                motorRightA.setPower(.05);
-                motorRightB.setPower(.05);
-            }
-        }
-
-
-        if (centerCol) {
-            if (rangeB() < 127) {
-                motorLeftA.setPower(.05);
-                motorLeftB.setPower(.05);
-                motorRightA.setPower(.05);
-                motorRightB.setPower(.05);
-            }
-        }
-
-        if (leftCol) {
-            if (rangeB() < 143) {
-                motorLeftA.setPower(.05);
-                motorLeftB.setPower(.05);
-                motorRightA.setPower(.05);
-                motorRightB.setPower(.05);
-            }
-        }
-            if (timer.milliseconds() > 750) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 16:
-
-        if (gyro() < 270) {
-            motorLeftA.setPower(-.1);
-            motorLeftB.setPower(-.1);
-            motorRightA.setPower(.1);
-            motorRightB.setPower(.1);
-        }
-        if (gyro() > 270) {
-            motorLeftA.setPower(.1);
-            motorLeftB.setPower(.1);
-            motorRightA.setPower(-.1);
-            motorRightB.setPower(-.1);
-        }
-            if (timer.milliseconds() > 750) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 18:
-
-        if (rangeF() > 22) {
-            motorLeftA.setPower(.1);
-            motorLeftB.setPower(.1);
-            motorRightA.setPower(.1);
-            motorRightB.setPower(.1);
-        }
-            if (timer.milliseconds() > 750) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 20:
-
-        //servoGlyph1.setPosition(GLYPH_1_RELEASE);
-        //servoGlyph2.setPosition(GLYPH_2_RELEASE);
-            if (timer.milliseconds() > 500) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 21:
-
-        if (rangeF() < 5) {
-            motorLeftA.setPower(-.2);
-            motorRightA.setPower(-.2);
-            motorLeftB.setPower(-.2);
-            motorRightB.setPower(-.2);
-        } else {
-            motorLeftA.setPower(0);
-            motorRightA.setPower(0);
-            motorLeftB.setPower(0);
-            motorRightB.setPower(0);
-        }
-            if (timer.milliseconds() > 750) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 23:
-
-        if (gyro() < 90.25 || gyro() > 89.75) {
-            motorLeftA.setPower(0);
-            motorLeftB.setPower(0);
-            motorRightA.setPower(0);
-            motorRightB.setPower(0);
-        } else {
-            motorLeftA.setPower(.1);
-            motorLeftB.setPower(.1);
-            motorRightA.setPower(-.1);
-            motorRightB.setPower(-.1);
-        }
-            if (timer.milliseconds() > 1000) {
-                seqRobot++;
-                timer.reset();
-            }
-        break;
-
-
-        case 99:  // Done
-        {
-            break;
-        }
-
-        default: {
-            break;
-        }
-    }
     }
 
     private void slp(int slptime) {
@@ -517,3 +517,4 @@ public class CyberRelicRedFront extends CyberRelicAbstract {
         }
     }
 }
+

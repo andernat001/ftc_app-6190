@@ -135,7 +135,7 @@ public class CyberRelicBlueFront2 extends CyberRelicAbstract{
                 }
                 telemetry.addData("2", true);
                 telemetry.update();
-                if(timer.milliseconds() > ) {
+                if(timer.milliseconds() > 1000) {
                     seqRobot++;
                     timer.reset();
                 }
