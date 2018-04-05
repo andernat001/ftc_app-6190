@@ -1,23 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.LineFollow.direction.left;
@@ -31,9 +17,7 @@ public class LineFollow extends CyberRelicAbstract {
 
     ColorSensor
             colorSensor;
-    OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
-    BNO055IMU imu;
+
     direction movementDirection = left;
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  //Added so opMode does not sleep
 
@@ -41,8 +25,6 @@ public class LineFollow extends CyberRelicAbstract {
     public void init() {
 
         super.init();
-
-
 
         colorSensor.enableLed(true);
 
@@ -88,7 +70,6 @@ public class LineFollow extends CyberRelicAbstract {
         if(colorValue < .100 && movementDirection == right){
             movementDirection = left;
         }
-
     }
 
     private void slp(int slptime) {
