@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.text.format.Time;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.LineFollow.direction.left;
@@ -12,11 +17,18 @@ import static org.firstinspires.ftc.teamcode.LineFollow.direction.right;
 @Autonomous(name = "LineFollow", group = "RiderModes")
 public class LineFollow extends CyberRelicAbstract {
 
+    Calendar startTime, loopTime;
+
     DcMotor
             rightDrive,leftDrive;
 
     ColorSensor
             colorSensor;
+
+    int
+        blackThreshold = 0, whiteThreshold = 0;
+
+    long loopIterations = 1;
 
     direction movementDirection = left;
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  //Added so opMode does not sleep
@@ -31,45 +43,41 @@ public class LineFollow extends CyberRelicAbstract {
     }
 
     @Override
+    public void start() {
+        super.start();
+
+        startTime = Calendar.getInstance();
+
+    }
+
+    @Override
     public void loop() {
-        switch (movementDirection) {
-            case left:
-                movementDirection = right;
-
-            case right:
-                movementDirection = left;
-
-        }
+        loopTime = Calendar.getInstance();
 
         int colorValue;
         colorValue = colorSensor.alpha();
 
-        if(movementDirection == left){
-            if(timer.milliseconds() < 350) {
-                rightDrive.setPower(.4);
-                leftDrive.setPower(.2);
-            }
-        }
-        if(movementDirection == right){
-            if(timer.milliseconds() < 350) {
-                rightDrive.setPower(.2);
-                leftDrive.setPower(.4);
-            }
-        }
-        if(colorValue > .100){
-            if(timer.milliseconds() > 350 && timer.milliseconds() < 400){
-                rightDrive.setPower(0);
-                leftDrive.setPower(0);
-            }
-            if(timer.milliseconds() > 400) {
-                rightDrive.setPower(.4);
-                leftDrive.setPower(.4);
-            }
-        }
-        if(colorValue < .100) {
-            timer.reset();
-        }
+        switch (movementDirection) {
+            case left:
+                if (colorValue < whiteThreshold) {
+                    rightDrive.setPower(0.4);
+                    leftDrive.setPower(0.3);
+                    movementDirection = right;
+                }
 
+            case right:
+                if (colorValue > blackThreshold) {
+                    rightDrive.setPower(0.3);
+                    leftDrive.setPower(0.4);
+                    movementDirection = left;
+                }
+
+        }
+        if (loopIterations % 500 == 0)
+            telemetry.addData("Loop Time", (Calendar.getInstance().getTimeInMillis() - loopTime.getTimeInMillis()) + " ms");
+            telemetry.addData("Running for", ((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()) / 1000) + " seconds");
+
+        loopIterations++;
     }
 
     private void slp(int slptime) {
