@@ -32,44 +32,44 @@ public class LineFollow extends CyberRelicAbstract {
 
     @Override
     public void loop() {
+        switch (movementDirection) {
+            case left:
+                movementDirection = right;
+
+            case right:
+                movementDirection = left;
+
+        }
 
         int colorValue;
         colorValue = colorSensor.alpha();
 
-        if(colorValue > .100 && movementDirection == left){
-            if(timer.milliseconds() < 250) {
+        if(movementDirection == left){
+            if(timer.milliseconds() < 350) {
                 rightDrive.setPower(.4);
                 leftDrive.setPower(.2);
             }
-            if(timer.milliseconds() > 250 && timer.milliseconds() < 300){
-                rightDrive.setPower(0);
-                leftDrive.setPower(0);
-            }
-            if(timer.milliseconds() > 300) {
-                rightDrive.setPower(.4);
-                leftDrive.setPower(.4);
-            }
         }
-        if(colorValue < .100 && movementDirection == left){
-            movementDirection = right;
-        }
-        if(colorValue > .100 && movementDirection == right){
-            if(timer.milliseconds() < 250) {
+        if(movementDirection == right){
+            if(timer.milliseconds() < 350) {
                 rightDrive.setPower(.2);
                 leftDrive.setPower(.4);
             }
-            if(timer.milliseconds() > 250 && timer.milliseconds() < 300){
+        }
+        if(colorValue > .100){
+            if(timer.milliseconds() > 350 && timer.milliseconds() < 400){
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
             }
-            if(timer.milliseconds() > 300) {
+            if(timer.milliseconds() > 400) {
                 rightDrive.setPower(.4);
                 leftDrive.setPower(.4);
             }
         }
-        if(colorValue < .100 && movementDirection == right){
-            movementDirection = left;
+        if(colorValue < .100) {
+            timer.reset();
         }
+
     }
 
     private void slp(int slptime) {
