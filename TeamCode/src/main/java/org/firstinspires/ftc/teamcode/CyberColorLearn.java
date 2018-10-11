@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /* ------------------------------------------------------------------
@@ -39,27 +38,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * ------------------------------------------------------------------
  */
 
-public class CyberColorLearn extends OpMode
+public class CyberColorLearn extends CyberAbstractOpMode
 {
     //------------------------------------------------------------------
     // Robot OpMode Loop Method
     //------------------------------------------------------------------
 
-    DcMotor motorLeftA, motorLeftB, motorRightA, motorRightB;
-
-    float hsvValues[] = {0F,0F,0F};
-
-    int seqRobot;
-
-    boolean white,red,blue;
-
     @Override
     public void init() {
+
+        super.init();
+
+
     }
 
     @Override
     public void loop()
     {
+
+        super.loop();
 
         // START ROBOT SEQUENCE
         // Establish the robot sequence of operation with the Switch operation.
@@ -70,10 +67,8 @@ public class CyberColorLearn extends OpMode
 
             case 1:
             {
-                motorLeftA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorRightA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 seqRobot++;
                 break;
             }
@@ -86,10 +81,8 @@ public class CyberColorLearn extends OpMode
 
             case 3:
             {
-                motorLeftA.setPower(0.1);
-                motorLeftB.setPower(0.1);
-                motorRightA.setPower(0.1);
-                motorRightB.setPower(0.1);
+                motorRight.setPower(0.1);
+                motorLeft.setPower(0.1);
                 if (!gamepad1.a) seqRobot++;
                 break;
             }
@@ -100,11 +93,8 @@ public class CyberColorLearn extends OpMode
 
             case 5:
             {
-                motorLeftA.setPower(0);
-                motorLeftB.setPower(0);
-                motorRightA.setPower(0);
-                motorRightB.setPower(0);
-
+                motorRight.setPower(0);
+                motorLeft.setPower(0);
                 if (!gamepad1.a) seqRobot = 2;
                 break;
             }
@@ -114,7 +104,7 @@ public class CyberColorLearn extends OpMode
 
 
         telemetry.addData("1. ", "Seq #  : " + seqRobot);
-        telemetry.addData("2. ", "Drive Pos L/R" + motorLeftA.getCurrentPosition() + "/" + motorRightA.getCurrentPosition());
+        telemetry.addData("2. ", "Drive Pos L/R" + motorLeft.getCurrentPosition() + "/" + motorRight.getCurrentPosition());
 
         telemetry.addData("3. Color Values","");
         telemetry.addData("4. Hue", hsvValues[0]);

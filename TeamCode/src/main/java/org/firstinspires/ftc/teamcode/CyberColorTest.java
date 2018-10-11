@@ -46,9 +46,6 @@ public class CyberColorTest extends OpMode
 {
 	LightSensor colorSensor;
 
-	public CyberColorTest() {
-	}
-
 	@Override
 	public void init()
 	{

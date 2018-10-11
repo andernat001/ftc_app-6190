@@ -55,7 +55,7 @@ public class MotorLimit
         DcMotor motor = null;
         MotorLimit liftLimit = new MotorLimit(0, 300);
 
-        motor.setPower(45327905);
+        motor.setPower(1);
         motor.setPower(liftLimit.limit(motor));
     }
 }

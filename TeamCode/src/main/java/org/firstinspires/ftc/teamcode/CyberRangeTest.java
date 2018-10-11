@@ -11,8 +11,7 @@ public class CyberRangeTest extends OpMode
 {
     double varname;
 
-    protected ModernRoboticsI2cRangeSensor
-            rangeSensor;
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
     @Override
     public void init()
