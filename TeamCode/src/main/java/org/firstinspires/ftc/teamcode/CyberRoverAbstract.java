@@ -2,16 +2,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import static java.lang.Thread.sleep;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -21,30 +13,35 @@ public abstract class CyberRoverAbstract extends OpMode {
 
     BNO055IMU imu;
 
-    protected DcMotor
-            motorLeftA, motorLeftB,
-            motorRightA, motorRightB;
+    // Establish Controller and Device String Constants
+    // These names need to match the Robot Controller configuration file device names.
+    final static String
+
+            MOTOR_DRIVE_LEFT_A = "leftA",
+            MOTOR_DRIVE_LEFT_B = "leftB",
+            MOTOR_DRIVE_RIGHT_A = "rightA",
+            MOTOR_DRIVE_RIGHT_B = "rightB",
+            MOTOR_MARKER = "marker",
+            SENSOR_COLOR = "color";
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
             pulseCaseMoveDone, // Case move complete pulse
             red,blue,
             fieldOrient,
             bDirection;
-
+    protected DcMotor
+            motorLeftA, motorLeftB,
+            motorRightA, motorRightB,
+            motorMarker;
+    // Auto: Values used to determine current color detected
     protected float
             targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
             targetDrRotateDeg,
             hsvValues[] = {0F, 0F, 0F},
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
+            powerMarker,
             velocityDrive, strafeDrive, rotationDrive;
-    // Auto: Values used to determine current color detected
-
-    protected double
-            targetPower, // General motor power variable (%, -1.0 to 1.0)
-            temp, gyro,
-            x,y,
-            tbd;
 
 
     // Establish Integer Variables
@@ -64,16 +61,11 @@ public abstract class CyberRoverAbstract extends OpMode {
     final static double
             DELAY_DRV_MOV_DONE = 0.1d,        // Hold/wait 0.1s after drive train move complete (seconds)
             ENCODER_CNT_PER_IN_DRIVE = 59.41979167d; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
-
-    // Establish Controller and Device String Constants
-    // These names need to match the Robot Controller configuration file device names.
-    final static String
-
-            MOTOR_DRIVE_LEFT_A = "leftA",
-            MOTOR_DRIVE_LEFT_B = "leftB",
-            MOTOR_DRIVE_RIGHT_A = "rightA",
-            MOTOR_DRIVE_RIGHT_B = "rightB",
-            SENSOR_COLOR = "color";
+    protected double
+            targetPower, // General motor power variable (%, -1.0 to 1.0)
+            temp,
+            x, y,
+            tbd;
 
     //------------------------------------------------------------------
     // Robot Initialization Method
@@ -98,6 +90,10 @@ public abstract class CyberRoverAbstract extends OpMode {
         motorRightB = hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT_B);
         motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
+
+        motorMarker = hardwareMap.dcMotor.get(MOTOR_MARKER);
+        motorMarker.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorMarker.setDirection(DcMotor.Direction.REVERSE);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -130,6 +126,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         motorRightB.setPower(0);
         motorLeftA.setPower(0);
         motorLeftB.setPower(0);
+        motorMarker.setPower(0);
     } // End OpMode Stop Method
 
     double gyro() {
