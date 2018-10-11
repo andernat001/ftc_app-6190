@@ -34,7 +34,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
 /**
@@ -46,9 +45,6 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 public class CyberColorTest extends OpMode
 {
 	LightSensor colorSensor;
-
-	public CyberColorTest() {
-	}
 
 	@Override
 	public void init()

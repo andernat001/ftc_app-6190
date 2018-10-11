@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-        import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 /**
  * Created by Steve on 10/9/2017.
  */
 
-public class CyberRangeTest extends CyberRelicAbstract
+public class CyberRangeTest extends OpMode
 {
     double varname;
-    public CyberRangeTest() {
-    }
+
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
     @Override
     public void init()
