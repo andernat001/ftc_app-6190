@@ -36,15 +36,33 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         motorLeftA.setPower(powerLeftA);
         motorLeftB.setPower(powerLeftB);
 
+        //Create dead-zone for drive train controls
+        if (gamepad1.left_trigger <= 0.1) {
+            gamepad1.left_trigger = 0;
+        }
+
+        if (gamepad1.right_trigger <= 0.1) {
+            gamepad1.right_trigger = 0;
+        }
+
+        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
+            gamepad1.left_stick_y = 0;
+        }
+
+        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
+            gamepad1.right_stick_x = 0;
+        }
 
         // Set controls for drive train
         velocityDrive = -gamepad1.left_stick_y;
         if (gamepad1.left_trigger >= 0.05) {
             strafeDrive = gamepad1.left_trigger;
         } else if (gamepad1.right_trigger >= 0.05) {
-            strafeDrive = gamepad1.right_trigger;
+            strafeDrive = -gamepad1.right_trigger;
+        } else {
+            strafeDrive = 0;
         }
-        rotationDrive = gamepad1.right_stick_x;
+        rotationDrive = -gamepad1.right_stick_x;
 
         //Field-Oriented on/off
         if (gamepad1.y)
@@ -81,21 +99,6 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
 
 
-        //Create dead-zone for drive train controls
-        if (gamepad1.left_stick_x <= 0.05 && gamepad1.left_stick_x >= -0.05)
-        {
-            gamepad1.left_stick_x = 0;
-        }
-
-        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05)
-        {
-            gamepad1.left_stick_y = 0;
-        }
-
-        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05)
-        {
-            gamepad1.right_stick_x = 0;
-        }
 
         // If the left stick and the right stick are used at the same time it halves the power of the motors for better accuracy
         if (gamepad1.left_stick_y > 0.05 || gamepad1.left_stick_y < -0.05 && gamepad1.right_stick_x > 0.05 || gamepad1.right_stick_x < -0.05 || gamepad1.left_trigger > 0.05 || gamepad1.right_trigger > 0.05) {
