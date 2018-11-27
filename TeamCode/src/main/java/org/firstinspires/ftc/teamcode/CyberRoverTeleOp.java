@@ -55,11 +55,14 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
         // Set controls for drive train
         velocityDrive = -gamepad1.left_stick_y;
-        if (gamepad1.left_trigger >= 0.05) {
+        if (gamepad1.left_trigger >= 0.05)
+        {
             strafeDrive = gamepad1.left_trigger;
-        } else if (gamepad1.right_trigger >= 0.05) {
+        } else if (gamepad1.right_trigger >= 0.05)
+        {
             strafeDrive = -gamepad1.right_trigger;
-        } else {
+        } else
+        {
             strafeDrive = 0;
         }
         rotationDrive = -gamepad1.right_stick_x;
@@ -161,15 +164,63 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = -velocityDrive + rotationDrive - strafeDrive;
         }
 
-        // Marker program controls
-        powerMarker = gamepad2.left_stick_y;
-        powerMarker = (float) scaleInput(powerMarker);
-        motorMarker.setPower(powerMarker);
+        // Lift program controls
+        powerLift = gamepad2.left_stick_y;
+        powerLift = (float) scaleInput(powerLift);
+        motorLift.setPower(powerLift);
 
-        // Marker program dead-zone
-        if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05) {
+        // Lift program dead-zone
+        if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
+        {
             gamepad2.left_stick_y = 0;
         }
+
+        if(gamepad2.a && locked)
+        {
+            locked = false;
+        }
+        if(gamepad2.a && !locked)
+        {
+            locked = true;
+        }
+
+        if (gamepad2.y)
+        {
+            lock = lock + INC_VAL;
+            servoLock.setPosition(lock/180);
+            slp(100);
+
+        }
+
+        if (gamepad2.a)
+        {
+            if (lock > 0)
+            {
+                lock = lock - INC_VAL;
+            }
+            else
+            {
+                lock = 0;
+            }
+            servoLock.setPosition(lock/180);
+            slp(100);
+
+        }
+
+        /*
+        if(locked)
+        {
+            servoLock.setPosition(SERVO_LOCKED);
+        }
+        if(!locked)
+        {
+            servoLock.setPosition(SERVO_UNLOCKED);
+        }
+        */
+
+        telemetry.addData("Locked: ", locked);
+        telemetry.addData("Lock Position", servoLock.getPosition());
+        telemetry.update();
 
 // End OpMode Loop Method
     }

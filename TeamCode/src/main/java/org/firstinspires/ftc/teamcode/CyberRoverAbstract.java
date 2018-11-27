@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -21,18 +22,20 @@ public abstract class CyberRoverAbstract extends OpMode {
             MOTOR_DRIVE_LEFT_B = "leftB",
             MOTOR_DRIVE_RIGHT_A = "rightA",
             MOTOR_DRIVE_RIGHT_B = "rightB",
-            MOTOR_MARKER = "marker",
+            MOTOR_LIFT = "lift",
+            SERVO_LOCK = "lock",
             SENSOR_COLOR = "color";
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
             pulseCaseMoveDone, // Case move complete pulse
             red,blue,
             fieldOrient,
-            bDirection;
+            bDirection,
+            locked;
     protected DcMotor
             motorLeftA, motorLeftB,
             motorRightA, motorRightB,
-            motorMarker;
+            motorLift;
     // Auto: Values used to determine current color detected
     protected float
             targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
@@ -40,9 +43,11 @@ public abstract class CyberRoverAbstract extends OpMode {
             hsvValues[] = {0F, 0F, 0F},
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
-            powerMarker,
+            powerLift,
+            lock,
             velocityDrive, strafeDrive, rotationDrive;
-
+    protected Servo
+            servoLock;
 
     // Establish Integer Variables
     protected int
@@ -52,10 +57,11 @@ public abstract class CyberRoverAbstract extends OpMode {
 
     // Establish Integer Constants
     final static int
-            STATIC_INT = 0;
+            INC_VAL = 0;
     // Establish Float Constants
     final static float
-            STATIC_FLOAT = 0;
+            SERVO_LOCKED = 0,
+            SERVO_UNLOCKED = 0;
 
     // Establish Double Constants
     final static double
@@ -91,9 +97,11 @@ public abstract class CyberRoverAbstract extends OpMode {
         motorRightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
-        motorMarker = hardwareMap.dcMotor.get(MOTOR_MARKER);
-        motorMarker.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorMarker.setDirection(DcMotor.Direction.REVERSE);
+        motorLift = hardwareMap.dcMotor.get(MOTOR_LIFT);
+        motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
+
+        servoLock = hardwareMap.servo.get(SERVO_LOCK);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -126,7 +134,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         motorRightB.setPower(0);
         motorLeftA.setPower(0);
         motorLeftB.setPower(0);
-        motorMarker.setPower(0);
+        motorLift.setPower(0);
     } // End OpMode Stop Method
 
     double gyro() {
