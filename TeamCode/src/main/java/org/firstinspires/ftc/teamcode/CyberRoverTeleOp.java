@@ -42,25 +42,22 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         if (gamepad1.left_trigger <= 0.1) {
             gamepad1.left_trigger = 0;
         }
-
         if (gamepad1.right_trigger <= 0.1) {
             gamepad1.right_trigger = 0;
         }
-
         if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
             gamepad1.left_stick_y = 0;
         }
-
         if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
             gamepad1.right_stick_x = 0;
         }
 
         // Set controls for drive train
         velocityDrive = gamepad1.left_stick_y;
-        if (gamepad1.left_trigger >= 0.05)
+        if (gamepad1.left_trigger >= 0.05) // Left trigger strafes to the left
         {
             strafeDrive = - gamepad1.left_trigger;
-        } else if (gamepad1.right_trigger >= 0.05)
+        } else if (gamepad1.right_trigger >= 0.05) // Right trigger strafes to the right
         {
             strafeDrive = gamepad1.right_trigger;
         } else
@@ -83,7 +80,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         x = strafeDrive;
         y = velocityDrive;
 
-        //Field-Oriented drive Algorithm
+        //Field-Oriented Drive Algorithm
         if (fieldOrient)
         {
             temp = y * Math.cos(Math.toDegrees(gyro())) + x * Math.sin(Math.toDegrees(gyro()));
@@ -102,11 +99,8 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         powerLeftA = (float) scaleInput(powerLeftA);
         powerLeftB = (float) scaleInput(powerLeftB);
 
-
-
-
-        // If the left stick and the right stick are used at the same time it halves the power of
-        // the motors for better accuracy
+        // If the left stick, the right stick, left trigger, and/or right trigger are used at the
+        // same time it halves the power of the motors for better accuracy
         if (gamepad1.left_stick_y > 0.05 || gamepad1.left_stick_y < -0.05 && gamepad1.right_stick_x
                 > 0.05 || gamepad1.right_stick_x < -0.05 || gamepad1.left_trigger > 0.05 ||
                 gamepad1.right_trigger > 0.05) {
@@ -141,12 +135,12 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         //Switch Drive
         if (gamepad1.dpad_up)
         {
-            bDirection = true; // Arm is front.
+            bDirection = true; // Front is front.
             slp(500);
         }
         if (gamepad1.dpad_down)
         {
-            bDirection = false; // Collection is front
+            bDirection = false; // Back is front
             slp(500);
         }
 
@@ -174,7 +168,8 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
         // Lift program controls
 
-        /*if (gamepad2.y)
+        /*if (gamepad2.y) // Tested to see if motorLift would work in set to position mode...
+        // it didn't work
         {
             motorLift.setTargetPosition(LIFT_UP);
         }
@@ -182,27 +177,34 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         {
             motorLift.setTargetPosition(LIFT_DOWN);
         }*/
-        powerLift = gamepad2.left_stick_y; // Divide power by two, so the motor slows down
-        powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
-                                                   // joystick is pressed
+
+        if (gamepad2.left_stick_y <= 0.075 || gamepad2.left_stick_y >= -0.75) // Make motorLift's
+            // maximum power 0.075
+        {
+            powerLift = gamepad2.left_stick_y;
+            powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
+            // joystick is pressed
+        } else {
+            powerLift = 0.075f;
+        }
         motorLift.setPower(powerLift);
 
 
-        if(gamepad2.b && locked) // Press b to lock and press it again to unlock it
+        if(gamepad2.b && locked) // Press b to lock
         {
             locked = false;
-            slp(75); // The program will wait, so it does not think the button is pressed
-                            // again before you release it
+            slp(100); // The program will wait, so it does not think the button is pressed
+            // again before you release it
         }
         if(!locked)
         {
             servoLock.setPosition(SERVO_UNLOCKED);
         }
 
-        if(gamepad2.b && !locked)
+        if(gamepad2.b && !locked) // Press b again to unlock
         {
             locked = true;
-            slp(75);// The program will wait, so it does not think the button is pressed
+            slp(100);// The program will wait, so it does not think the button is pressed
                            // again before you release it
         }
         if(locked)
@@ -234,15 +236,13 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
         }*/
 
-
-
-
-
-
-        telemetry.addData("Locked: ", locked);
-        telemetry.addData("Lock Position:", servoLock.getPosition());
-        telemetry.addData("Lift Position", motorLift.getCurrentPosition());
-        telemetry.update();
+        // Add telemetry for use while driving and for resetting system positions between matches
+        telemetry.addData("Locked: ", locked); // Will say "true" or "false"
+        telemetry.addData("Lock Position:", servoLock.getPosition()); // Will tell position
+        // of servoLock
+        telemetry.addData("Lift Position", motorLift.getCurrentPosition()); // Will tell
+        // position of motorLift
+        telemetry.update(); // Updates telemetry
 
 // End OpMode Loop Method
     }

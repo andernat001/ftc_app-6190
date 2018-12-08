@@ -59,7 +59,7 @@ public abstract class CyberRoverAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = 0, LIFT_DOWN = 700;
+            LIFT_UP = -760, LIFT_DOWN = 60;
     // Establish Float Constants
     final static float
             SERVO_LOCKED = 0.03333f,

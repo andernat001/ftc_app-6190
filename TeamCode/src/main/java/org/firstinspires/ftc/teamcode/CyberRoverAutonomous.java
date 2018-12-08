@@ -105,7 +105,9 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
 
             }    // End Robot Sequence
 
+            // Adds telemetry for trouble-shooting autonomous
             telemetry.addData("Lift Encoder: ", motorLift.getCurrentPosition());
+            telemetry.addData("Lock_Position: ", servoLock.getPosition());
             telemetry.addData("Case: ", seqRobot);
             telemetry.update();
 
