@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -57,16 +58,18 @@ public abstract class CyberRoverAbstract extends OpMode {
 
     // Establish Integer Constants
     final static int
-            INC_VAL = 0;
+            INC_VAL = 1,
+            LIFT_UP = 0, LIFT_DOWN = 700;
     // Establish Float Constants
     final static float
-            SERVO_LOCKED = 0,
-            SERVO_UNLOCKED = 0;
+            SERVO_LOCKED = 0.03333f,
+            SERVO_UNLOCKED = 0.4494f;
 
     // Establish Double Constants
     final static double
             DELAY_DRV_MOV_DONE = 0.1d,        // Hold/wait 0.1s after drive train move complete (seconds)
             ENCODER_CNT_PER_IN_DRIVE = 59.41979167d; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
+
     protected double
             targetPower, // General motor power variable (%, -1.0 to 1.0)
             temp,
@@ -99,7 +102,7 @@ public abstract class CyberRoverAbstract extends OpMode {
 
         motorLift = hardwareMap.dcMotor.get(MOTOR_LIFT);
         motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLift.setDirection(DcMotor.Direction.REVERSE);
+        motorLift.setDirection(DcMotor.Direction.FORWARD);
 
         servoLock = hardwareMap.servo.get(SERVO_LOCK);
 

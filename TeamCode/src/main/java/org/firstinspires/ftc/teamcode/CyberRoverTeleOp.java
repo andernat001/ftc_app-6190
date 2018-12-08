@@ -19,9 +19,11 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         motorRightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftA.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fieldOrient = false;
         bDirection = true;
+        locked = false;
 
     }
 
@@ -54,13 +56,13 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         }
 
         // Set controls for drive train
-        velocityDrive = -gamepad1.left_stick_y;
+        velocityDrive = gamepad1.left_stick_y;
         if (gamepad1.left_trigger >= 0.05)
         {
-            strafeDrive = gamepad1.left_trigger;
+            strafeDrive = - gamepad1.left_trigger;
         } else if (gamepad1.right_trigger >= 0.05)
         {
-            strafeDrive = -gamepad1.right_trigger;
+            strafeDrive = gamepad1.right_trigger;
         } else
         {
             strafeDrive = 0;
@@ -103,21 +105,26 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
 
 
-        // If the left stick and the right stick are used at the same time it halves the power of the motors for better accuracy
-        if (gamepad1.left_stick_y > 0.05 || gamepad1.left_stick_y < -0.05 && gamepad1.right_stick_x > 0.05 || gamepad1.right_stick_x < -0.05 || gamepad1.left_trigger > 0.05 || gamepad1.right_trigger > 0.05) {
+        // If the left stick and the right stick are used at the same time it halves the power of
+        // the motors for better accuracy
+        if (gamepad1.left_stick_y > 0.05 || gamepad1.left_stick_y < -0.05 && gamepad1.right_stick_x
+                > 0.05 || gamepad1.right_stick_x < -0.05 || gamepad1.left_trigger > 0.05 ||
+                gamepad1.right_trigger > 0.05) {
             powerRightA = Range.clip(powerRightA, -0.5f, 0.5f);
             powerRightB = Range.clip(powerRightB, -0.5f, 0.5f);
             powerLeftA = Range.clip(powerLeftA, -0.5f, 0.5f);
             powerLeftB = Range.clip(powerLeftB, -0.5f, 0.5f);
 
-        } else if (gamepad1.left_trigger > 0.05 && gamepad1.right_stick_x > 0.05 || gamepad1.right_stick_x < -0.05 || gamepad1.right_trigger > 0.05)
+        } else if (gamepad1.left_trigger > 0.05 && gamepad1.right_stick_x > 0.05 ||
+                gamepad1.right_stick_x < -0.05 || gamepad1.right_trigger > 0.05)
         {
             powerRightA = Range.clip(powerRightA, -0.5f, 0.5f);
             powerRightB = Range.clip(powerRightB, -0.5f, 0.5f);
             powerLeftA = Range.clip(powerLeftA, -0.5f, 0.5f);
             powerLeftB = Range.clip(powerLeftB, -0.5f, 0.5f);
 
-        } else if (gamepad1.right_trigger > 0.05 && gamepad1.right_stick_x > 0.05 || gamepad1.right_stick_x < -0.05)
+        } else if (gamepad1.right_trigger > 0.05 && gamepad1.right_stick_x > 0.05 ||
+                gamepad1.right_stick_x < -0.05)
         {
             powerRightA = Range.clip(powerRightA, -0.5f, 0.5f);
             powerRightB = Range.clip(powerRightB, -0.5f, 0.5f);
@@ -143,7 +150,8 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             slp(500);
         }
 
-        // Sets bDirection to true when field-oriented driving is on, so field-orient controls are not flipped
+        // Sets bDirection to true when field-oriented driving is on, so field-orient controls are
+        // not flipped
         if (fieldOrient)
         {
             bDirection = true;
@@ -165,25 +173,44 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         }
 
         // Lift program controls
-        powerLift = gamepad2.left_stick_y;
-        powerLift = (float) scaleInput(powerLift);
+
+        /*if (gamepad2.y)
+        {
+            motorLift.setTargetPosition(LIFT_UP);
+        }
+        if (gamepad2.a)
+        {
+            motorLift.setTargetPosition(LIFT_DOWN);
+        }*/
+        powerLift = gamepad2.left_stick_y; // Divide power by two, so the motor slows down
+        powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
+                                                   // joystick is pressed
         motorLift.setPower(powerLift);
 
-        // Lift program dead-zone
-        if (gamepad2.left_stick_y <= 0.05 && gamepad2.left_stick_y >= -0.05)
-        {
-            gamepad2.left_stick_y = 0;
-        }
 
-        if(gamepad2.a && locked)
+        if(gamepad2.b && locked) // Press b to lock and press it again to unlock it
         {
             locked = false;
+            slp(75); // The program will wait, so it does not think the button is pressed
+                            // again before you release it
         }
-        if(gamepad2.a && !locked)
+        if(!locked)
         {
-            locked = true;
+            servoLock.setPosition(SERVO_UNLOCKED);
         }
 
+        if(gamepad2.b && !locked)
+        {
+            locked = true;
+            slp(75);// The program will wait, so it does not think the button is pressed
+                           // again before you release it
+        }
+        if(locked)
+        {
+            servoLock.setPosition(SERVO_LOCKED);
+        }
+
+        /* // Controls used to test the needed position of the servo
         if (gamepad2.y)
         {
             lock = lock + INC_VAL;
@@ -205,21 +232,16 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             servoLock.setPosition(lock/180);
             slp(100);
 
-        }
+        }*/
 
-        /*
-        if(locked)
-        {
-            servoLock.setPosition(SERVO_LOCKED);
-        }
-        if(!locked)
-        {
-            servoLock.setPosition(SERVO_UNLOCKED);
-        }
-        */
+
+
+
+
 
         telemetry.addData("Locked: ", locked);
-        telemetry.addData("Lock Position", servoLock.getPosition());
+        telemetry.addData("Lock Position:", servoLock.getPosition());
+        telemetry.addData("Lift Position", motorLift.getCurrentPosition());
         telemetry.update();
 
 // End OpMode Loop Method
