@@ -190,7 +190,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         motorLift.setPower(powerLift);
 
 
-        if(gamepad2.b && locked) // Press b to lock
+        if(gamepad2.a && locked) // Press a to lock
         {
             locked = false;
             slp(100); // The program will wait, so it does not think the button is pressed
@@ -201,7 +201,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             servoLock.setPosition(SERVO_UNLOCKED);
         }
 
-        if(gamepad2.b && !locked) // Press b again to unlock
+        if(gamepad2.a && !locked) // Press a again to unlock
         {
             locked = true;
             slp(100);// The program will wait, so it does not think the button is pressed
@@ -237,7 +237,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         }*/
 
         // Add telemetry for use while driving and for resetting system positions between matches
-        telemetry.addData("Locked: ", locked); // Will say "true" or "false"
+        telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not
         telemetry.addData("Lock Position:", servoLock.getPosition()); // Will tell position
         // of servoLock
         telemetry.addData("Lift Position", motorLift.getCurrentPosition()); // Will tell
