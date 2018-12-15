@@ -59,11 +59,11 @@ public abstract class CyberRoverAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = -760, LIFT_DOWN = 60;
+            LIFT_UP = -630, LIFT_DOWN = 0;
     // Establish Float Constants
     final static float
-            SERVO_LOCKED = 0.03333f,
-            SERVO_UNLOCKED = 0.4494f;
+            SERVO_LOCKED = 0.639f,
+            SERVO_UNLOCKED = 0.905f;
 
     // Establish Double Constants
     final static double
