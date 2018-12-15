@@ -39,59 +39,66 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
 
-                    seqRobot++;
-                    timer.reset();
-                    break;
-                }
-
-                case 2: // Transition lift motor to Run-to-Position mode.
-                {
-                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    seqRobot++;
-                    timer.reset();
-                    break;  // Note: The Break command will ensure one scan of code executed while motor
+                    if (timer.milliseconds() > 1000) // Wait 1 second
+                    {
+                        seqRobot++;
+                        timer.reset();
+                    }
+                    break; // Note: The Break command will ensure one scan of code executed while motor
                     // modes take effect. If Run-to-Position not enabled, unexpected operations
                     // may occur.
                 }
 
-                case 3: { // Unlock the locking mechanism and set down robot
-                    servoLock.setPosition(SERVO_UNLOCKED);
-                    motorLift.setTargetPosition(LIFT_UP);
-                    motorLift.setPower(0.075);
+                case 2: { // Unlock the locking mechanism and set down robot
+                    servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
 
-                    seqRobot++;
-                    timer.reset();
+                    if (timer.milliseconds() > 1250) // Wait 1.250 seconds
+                    {
+                        motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION); // Set down robot
+                        motorLift.setTargetPosition(LIFT_UP);
+                        motorLift.setPower(0.15);
+                    }
+                    if (motorLift.getCurrentPosition() <= LIFT_UP + 10 &&
+                            motorLift.getCurrentPosition() >= LIFT_UP -10) // Once motorLift is
+                        // within 10 encoder counts of LIFT_UP the autonomous will continue
+                    {
+                        seqRobot++;
+                        timer.reset();
+                    }
                     break;
                 }
 
-                case 4: { // Check the position of the motor and don't move on until it is within
+                case 3: { // Check the position of the motor and don't move on until it is within
                           // the correct range
                     if (motorLift.getCurrentPosition() >= LIFT_UP - 10 &&
-                            motorLift.getCurrentPosition() <= LIFT_UP) {
+                            motorLift.getCurrentPosition() <= LIFT_UP + 10) {
                         seqRobot++;
                         timer.reset();
                         break;
-                    } else {
-                        seqRobot = 4;
+                    } else { // If not within range, repeat case
+                        seqRobot = 3;
                         timer.reset();
-                        break;
                     }
-
+                    break;
                 }
 
-                case 5: { // Strafe the robot to the left and off the shuttle
-                    if (timer.milliseconds() < 1500) {
+                case 4: { // Strafe the robot to the left and off the shuttle
+                    if (timer.milliseconds() < 1250) // Strafe for 1.250 seconds
+                    {
                         motorLeftA.setPower(0.1);
-                        motorLeftB.setPower(-0.09);
-                        motorRightA.setPower(-0.09);
+                        motorLeftB.setPower(-0.1);
+                        motorRightA.setPower(-0.1);
                         motorRightB.setPower(0.1);
-                    } else {
+                    } else { // Once time on this case passes 1.250 seconds all motors will set
+                        // power to 0 and will continue
                         motorLeftA.setPower(0);
                         motorLeftB.setPower(0);
                         motorRightA.setPower(0);
                         motorRightB.setPower(0);
+                        seqRobot++;
+                        timer.reset();
                     }
+                    break;
                 }
                 case 99:  // Done
                 {
@@ -106,7 +113,9 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
             }    // End Robot Sequence
 
             // Adds telemetry for trouble-shooting autonomous
+            telemetry.addData("Lift Target: ", motorLift.getTargetPosition());
             telemetry.addData("Lift Encoder: ", motorLift.getCurrentPosition());
+            telemetry.addData("Lift Power: ", motorLift.getPower());
             telemetry.addData("Lock_Position: ", servoLock.getPosition());
             telemetry.addData("Case: ", seqRobot);
             telemetry.update();
