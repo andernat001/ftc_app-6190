@@ -25,6 +25,7 @@ public abstract class CyberRoverAbstract extends OpMode {
             MOTOR_DRIVE_RIGHT_B = "rightB",
             MOTOR_LIFT = "lift",
             SERVO_LOCK = "lock",
+            SERVO_DEPOT = "depot",
             SENSOR_COLOR = "color";
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
@@ -45,10 +46,10 @@ public abstract class CyberRoverAbstract extends OpMode {
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
             powerLift,
-            lock,
+            depot,
             velocityDrive, strafeDrive, rotationDrive;
     protected Servo
-            servoLock;
+            servoLock,servoDepot;
 
     // Establish Integer Variables
     protected int
@@ -105,6 +106,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         motorLift.setDirection(DcMotor.Direction.FORWARD);
 
         servoLock = hardwareMap.servo.get(SERVO_LOCK);
+        servoDepot = hardwareMap.servo.get(SERVO_DEPOT);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
