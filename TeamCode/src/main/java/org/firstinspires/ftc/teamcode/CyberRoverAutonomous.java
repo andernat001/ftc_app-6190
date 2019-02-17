@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "RoverO", group = "RiderModes")
+@Autonomous(name = "Rover987654", group = "RiderModes")
 public class CyberRoverAutonomous extends CyberRoverAbstract{
 
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  // Added so
@@ -17,6 +17,13 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
 
     @Override
     public void init() {
+        super.init();
+
+        motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLeftB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
@@ -28,7 +35,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
         // The active Case (i.e., sequence step) is established by the value in seqRobot.
         // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
         switch (seqRobot) {
-                /*case 1: { // Set all motor power to 0
+                case 1: { // Set all motor power to 0
                     motorLift.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
@@ -55,8 +62,8 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                             motorLift.getCurrentPosition() >= LIFT_UP -20) // Once motorLift is
                         // within 20 encoder counts of LIFT_UP the autonomous will continue
                     {
+                        motorLift.setPower(0);
                         seqRobot++;
-                        timer.reset();
                     }
                     break;
                 }
@@ -66,15 +73,12 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                             motorLift.getCurrentPosition() <= LIFT_UP + 10) {
                         motorLift.setTargetPosition(LIFT_UP);
                         motorLift.setPower(0.05);
-                        seqRobot++;
-                        timer.reset();
-                        break;
                     } else { // If not within range, repeat case
                         seqRobot = 3;
-                        timer.reset();
                     }
+                    seqRobot++;
                     break;
-                }*/
+                }
 
             case 4: { // Strafe the robot to the left and off the shuttle
 
@@ -87,8 +91,8 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 // counts) and to initiate the move. cmdMoveR initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
                 targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
+                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
+                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
                 targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
 
 
@@ -119,14 +123,11 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 // May need to add motor-is-busy check to ensure electric breaking complete.
                 // May need to compensate for motor power if one motor is faster than another to keep straight line.
                 if (chkMove(motorLeftA, targetPosLeftA, ERROR_DRV_POS) &&
-                        chkMove(motorLeftB, -targetPosLeftB, ERROR_DRV_POS) &&
-                        chkMove(motorRightA, -targetPosRightA, ERROR_DRV_POS) &&
-                        chkMove(motorRightB, targetPosRightB, ERROR_DRV_POS)) {    // If drive train at target, hold position for X amount of time to stabilize motors.
-                    if (seqRobot == 5) {
-                        seqRobot++;
-                    }else {
-                        seqRobot = 99;
-                    }
+                        chkMove(motorLeftB, targetPosLeftB, ERROR_DRV_POS) &&
+                        chkMove(motorRightA, targetPosRightA, ERROR_DRV_POS) &&
+                        chkMove(motorRightB, targetPosRightB, ERROR_DRV_POS))
+                {    // If drive train at target, hold position for X amount of time to stabilize motors.
+                    seqRobot++;
                 }
                 break;
             }
@@ -137,14 +138,17 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 motorRightA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorRightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLeftB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
                 motorLeftA.setTargetPosition(0);
                 motorLeftB.setTargetPosition(0);
                 motorRightA.setTargetPosition(0);
                 motorRightB.setTargetPosition(0);
+
                 seqRobot++;
                 break;
             }
@@ -164,14 +168,19 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
         // Adds telemetry for trouble-shooting autonomous
         //telemetry.addData("Lift Target: ", motorLift.getTargetPosition());
         //telemetry.addData("Lift Encoder: ", motorLift.getCurrentPosition());
-        telemetry.addData("LeftA Encoder: ", motorLeftA.getCurrentPosition());
-        telemetry.addData("LeftA Target ", motorLeftA.getTargetPosition());
-        telemetry.addData("LeftB Encoder: ", motorLeftB.getCurrentPosition());
-        telemetry.addData("LeftB Target: ", motorLeftB.getTargetPosition());
-        telemetry.addData("RightA Encoder: ", motorRightA.getCurrentPosition());
-        telemetry.addData("RightA Target: ", motorRightA.getTargetPosition());
-        telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
-        telemetry.addData("RightB Target: ", motorRightB.getTargetPosition());
+//        telemetry.addData("LeftA Encoder: ", motorLeftA.getCurrentPosition());
+//        telemetry.addData("LeftA Target ", motorLeftA.getTargetPosition());
+//        telemetry.addData("LeftB Encoder: ", motorLeftB.getCurrentPosition());
+//        telemetry.addData("LeftB Target: ", motorLeftB.getTargetPosition());
+//        telemetry.addData("RightA Encoder: ", motorRightA.getCurrentPosition());
+//        telemetry.addData("RightA Target: ", motorRightA.getTargetPosition());
+//        telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
+//        telemetry.addData("RightB Target: ", motorRightB.getTargetPosition());
+        telemetry.addData("LeftA check", chkMove(motorLeftA, targetPosLeftA, ERROR_DRV_POS));
+        telemetry.addData("LeftB check", chkMove(motorLeftB, targetPosLeftB, ERROR_DRV_POS));
+        telemetry.addData("RightA check", chkMove(motorRightA, targetPosRightA, ERROR_DRV_POS));
+        telemetry.addData("RightB check", chkMove(motorRightB, targetPosRightB, ERROR_DRV_POS));
+
 
         //telemetry.addData("Lift Power: ", motorLift.getPower());
         //telemetry.addData("Lock_Position: ", servoLock.getPosition());
