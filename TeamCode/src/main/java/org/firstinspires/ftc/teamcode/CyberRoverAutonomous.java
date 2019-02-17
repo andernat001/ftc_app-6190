@@ -28,12 +28,32 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
         // The active Case (i.e., sequence step) is established by the value in seqRobot.
         // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
         switch (seqRobot) {
+
+        //------------------------------------------------------------------
+        // Robot OpMode Loop Method
+        //------------------------------------------------------------------
+
+        @Override
+        public void init() {
+
+        }
+
+        @Override
+        public void loop() {
+
+            // START ROBOT SEQUENCE
+            // Establish the robot sequence of operation with the Switch operation.
+            // The active Case (i.e., sequence step) is established by the value in seqRobot.
+            // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
+            switch (seqRobot) {
+
                 /*case 1: { // Set all motor power to 0
                     motorLift.setPower(0);
                     motorRightA.setPower(0);
                     motorRightB.setPower(0);
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
+
                     if (timer.milliseconds() > 1000) // Wait 1 second
                     {
                         seqRobot++;
@@ -45,6 +65,10 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 }
                 case 2: { // Unlock the locking mechanism and set down robot
                     servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
+
+                case 2: { // Unlock the locking mechanism and set down robot
+                    servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
+
                     if (timer.milliseconds() > 1250) // Wait 1.250 seconds
                     {
                         motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION); // Set down robot
@@ -60,6 +84,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                     }
                     break;
                 }
+
                 case 3: { // Check the position of the motor and don't move on until it is within
                           // the correct range
                     if (motorLift.getCurrentPosition() >= LIFT_UP - 10 &&
@@ -68,6 +93,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                         motorLift.setPower(0.05);
                         seqRobot++;
                         timer.reset();
+
                         break;
                     } else { // If not within range, repeat case
                         seqRobot = 3;
@@ -89,7 +115,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
                 targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
                 targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
+
 
 
                     /*if (timer.milliseconds() < 1250) // Strafe for 1.250 seconds
