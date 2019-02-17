@@ -181,7 +181,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         if (gamepad2.left_stick_y <= 0.075 || gamepad2.left_stick_y >= -0.75) // Make motorLift's
             // maximum power 0.075
         {
-            powerLift = gamepad2.left_stick_y;
+            powerLift = -gamepad2.left_stick_y;
             powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
             // joystick is pressed
         } else {
@@ -193,7 +193,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         if(gamepad2.a && locked) // Press a to lock
         {
             locked = false;
-            slp(100); // The program will wait, so it does not think the button is pressed
+            slp(250); // The program will wait, so it does not think the button is pressed
             // again before you release it
         }
         if(!locked)
@@ -204,7 +204,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         if(gamepad2.a && !locked) // Press a again to unlock
         {
             locked = true;
-            slp(100);// The program will wait, so it does not think the button is pressed
+            slp(250);// The program will wait, so it does not think the button is pressed
                            // again before you release it
         }
         if(locked)
@@ -212,11 +212,17 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             servoLock.setPosition(SERVO_LOCKED);
         }
 
-         // Controls used to test the needed position of the servo
+        if (gamepad2.x){
+            servoDepotDrop.setPosition(DEPOT_DOWN);
+        }
+        else {
+            servoDepotDrop.setPosition(DEPOT_UP);
+        }
+        /* // Controls used to test the needed position of the servo
         if (gamepad2.x)
         {
             depot = depot + INC_VAL;
-            servoDepot.setPosition(depot/180);
+            servoDepotDrop.setPosition(depot/180);
             slp(100);
 
         }
@@ -231,16 +237,16 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             {
                 depot = 0;
             }
-            servoDepot.setPosition(depot/180);
+            servoDepotDrop.setPosition(depot/180);
             slp(100);
 
-        }
+        }*/
 
         // Add telemetry for use while driving and for resetting system positions between matches
         telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not
         telemetry.addData("Lock Position:", servoLock.getPosition()); // Will tell position
         // of servoLock
-        telemetry.addData("Depot Position:", servoDepot.getPosition()); // Will tell position
+        telemetry.addData("Depot Drop Position:", servoDepotDrop.getPosition()); // Will tell position
         // of servoDepot
         telemetry.addData("Lift Position", motorLift.getCurrentPosition()); // Will tell
         // position of motorLift

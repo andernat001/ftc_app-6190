@@ -26,6 +26,7 @@ public abstract class CyberRoverAbstract extends OpMode {
             MOTOR_LIFT = "lift",
             SERVO_LOCK = "lock",
             SERVO_DEPOT = "depot",
+            SERVO_DEPOT_DROP = "depotDrop",
             SENSOR_COLOR = "color";
 
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
@@ -49,7 +50,7 @@ public abstract class CyberRoverAbstract extends OpMode {
             depot,
             velocityDrive, strafeDrive, rotationDrive;
     protected Servo
-            servoLock,servoDepot;
+            servoLock,servoDepot, servoDepotDrop;
 
     // Establish Integer Variables
     protected int
@@ -60,16 +61,21 @@ public abstract class CyberRoverAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = -630, LIFT_DOWN = 0;
+            LIFT_UP = 1309, LIFT_DOWN = 0,
+            ERROR_DRV_POS = 20;                 // Allowed error in encoder counts following drive train position move
+
     // Establish Float Constants
     final static float
             SERVO_LOCKED = 0.639f,
-            SERVO_UNLOCKED = 0.905f;
+            SERVO_UNLOCKED = 0.905f,
+            DEPOT_UP = 0.528f,
+            DEPOT_DOWN = 0.883f,
+            ENCODER_CNT_PER_IN_DRIVE = 59.42f; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
+
 
     // Establish Double Constants
     final static double
-            DELAY_DRV_MOV_DONE = 0.1d,        // Hold/wait 0.1s after drive train move complete (seconds)
-            ENCODER_CNT_PER_IN_DRIVE = 59.41979167d; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
+            DELAY_DRV_MOV_DONE = 250d;        // Hold/wait 0.1s after drive train move complete (seconds)
 
     protected double
             targetPower, // General motor power variable (%, -1.0 to 1.0)
@@ -107,6 +113,8 @@ public abstract class CyberRoverAbstract extends OpMode {
 
         servoLock = hardwareMap.servo.get(SERVO_LOCK);
         servoDepot = hardwareMap.servo.get(SERVO_DEPOT);
+        servoDepotDrop = hardwareMap.servo.get(SERVO_DEPOT_DROP);
+
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -114,7 +122,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        seqRobot = 1;
+        seqRobot = 4;
 
         bDirection = true;
     } // End OpMode Initialization Method
@@ -178,8 +186,8 @@ public abstract class CyberRoverAbstract extends OpMode {
         int target = ((int) (distIn * encoderCntPerIn));// + motor.getCurrentPosition();
 
         // Set motor target and power
-        motor.setPower(power);
         motor.setTargetPosition(target);
+        motor.setPower(power);
 
         return target;
     }
