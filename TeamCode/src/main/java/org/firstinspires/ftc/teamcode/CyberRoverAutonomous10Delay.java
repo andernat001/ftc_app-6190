@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "RoverDepot", group = "RiderModes")
-public class CyberRoverAutonomous extends CyberRoverAbstract{
+@Autonomous(name = "Rover10", group = "RiderModes")
+public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
 
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  // Added so
     // opMode does not sleep
@@ -40,72 +40,73 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 seqRobot++;
                 break;
             }
+
+            case 2:
             case 1: { // Set all motor power to 0
-                    motorLift.setPower(0);
-                    motorRightA.setPower(0);
-                    motorRightB.setPower(0);
-                    motorLeftA.setPower(0);
-                    motorLeftB.setPower(0);
-                    if (timer.milliseconds() > 1000) // Wait 1 second
-                    {
-                        seqRobot++;
-                        timer.reset();
-                    }
-                    break; // Note: The Break command will ensure one scan of code executed while motor
-                    // modes take effect. If Run-to-Position not enabled, unexpected operations
-                    // may occur.
+                motorLift.setPower(0);
+                motorRightA.setPower(0);
+                motorRightB.setPower(0);
+                motorLeftA.setPower(0);
+                motorLeftB.setPower(0);
+                if (timer.milliseconds() > 5000) // Wait 10 seconds
+                {
+                    seqRobot++;
+                    timer.reset();
                 }
+                break; // Note: The Break command will ensure one scan of code executed while motor
+                // modes take effect. If Run-to-Position not enabled, unexpected operations
+                // may occur.
+            }
+            case 3: { // Unlock the locking mechanism and set down robot
+                servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
+                if (timer.milliseconds() > 2000) // Wait 1.500 seconds
+                {
+                    motorLift.setTargetPosition(LIFT_UP - 60);
+                    motorLift.setPower(0.15);
+                }
+                if (motorLift.getCurrentPosition() <= LIFT_UP - 20 &&
+                        motorLift.getCurrentPosition() >= LIFT_UP -50) // Once motorLift is
+                // within 20 encoder counts of LIFT_UP the autonomous will continue
+                {
+                    motorLift.setPower(0);
+                    seqRobot++;
+                }
+                break;
+            }
+            case 4: { // Check the position of the motor and don't move on until it is within
+                // the correct range
+                if (motorLift.getCurrentPosition() >= LIFT_UP -70 &&
+                        motorLift.getCurrentPosition() <= LIFT_UP - 40) {
+                    motorLift.setTargetPosition(LIFT_UP);
+                    motorLift.setPower(0.05);
+                } else { // If not within range, repeat case
+                    seqRobot = 3;
+                }
+                seqRobot++;
+                break;
+            }
 
-//            case 2: { // Unlock the locking mechanism and set down robot
-//                    servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
-//                    if (timer.milliseconds() > 2000) // Wait 1.500 seconds
-//                    {
-//                        motorLift.setTargetPosition(LIFT_UP - 60);
-//                        motorLift.setPower(0.15);
-//                    }
-//                    if (motorLift.getCurrentPosition() <= LIFT_UP - 20 &&
-//                            motorLift.getCurrentPosition() >= LIFT_UP -50) // Once motorLift is
-//                        // within 20 encoder counts of LIFT_UP the autonomous will continue
-//                    {
-//                        motorLift.setPower(0);
-//                        seqRobot++;
-//                    }
-//                    break;
-//                }
-//                case 3: { // Check the position of the motor and don't move on until it is within
-//                          // the correct range
-//                    if (motorLift.getCurrentPosition() >= LIFT_UP -70 &&
-//                            motorLift.getCurrentPosition() <= LIFT_UP - 40) {
-//                        motorLift.setTargetPosition(LIFT_UP);
-//                        motorLift.setPower(0.05);
-//                    } else { // If not within range, repeat case
-//                        seqRobot = 3;
-//                    }
-//                    seqRobot++;
-//                    break;
-//                }
-
-            case 2: { // Strafe the robot to the left and off the shuttle
+            case 5: { // Strafe the robot to the left and off the shuttle
 
                 // Define drive train target position and motor power.E
                 targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
-                targetDrDistInch = -55f; // Set target distance
-                targetPower = -0.5d;  // Set power
+                targetDrDistInch = 5f; // Set target distance
+                targetPower = 0.05d;  // Set power
 
                 // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
-                // counts) and to initiate the move. cmdMoveR [-;initiates a relative move.
+                // counts) and to initiate the move. cmdMoveR initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
                 targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
+                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
+                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
                 targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
 
                 seqRobot++;
                 break;
             }
 
+            case 9:
             case 6:
-            case 3:
                 // Hold until drive train move is complete
             {
                 // Use this OpModes's custom chkMove to determine if motor move(s) are complete
@@ -122,8 +123,8 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 7:
-            case 4:// Reset encoders
+            case 10:
+            case 7:// Reset encoders
             {
                 motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -143,71 +144,71 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 seqRobot++;
                 break;
             }
-//
-////            case 8:
-////            {
-////                motorLift.setTargetPosition(LIFT_UP);
-////                motorLift.setPower(0.15);
-////                if (motorLift.getCurrentPosition() <= LIFT_UP + 20 &&
-////                        motorLift.getCurrentPosition() >= LIFT_UP -20) // Once motorLift is
-////                // within 20 encoder counts of LIFT_UP the autonomous will continue
-////                {
-////                    motorLift.setPower(0);
-////                    seqRobot++;
-////                }
-////                break;
-////            }
-////
-////            case 9:
-////            { // Check the position of the motor and don't move on until it is within
-////                // the correct range
-////                if (motorLift.getCurrentPosition() >= LIFT_UP -10 &&
-////                        motorLift.getCurrentPosition() <= LIFT_UP + 10) {
-////                    motorLift.setTargetPosition(LIFT_UP);
-////                    motorLift.setPower(0.05);
-////                } else { // If not within range, repeat case
-////                    seqRobot = 3;
-////                }
-////                seqRobot++;
-////                break;
-////            }
+
 //            case 8:
-//                { // Strafe the robot to the left and off the shuttle
+//            {
+//                motorLift.setTargetPosition(LIFT_UP);
+//                motorLift.setPower(0.15);
+//                if (motorLift.getCurrentPosition() <= LIFT_UP + 20 &&
+//                        motorLift.getCurrentPosition() >= LIFT_UP -20) // Once motorLift is
+//                // within 20 encoder counts of LIFT_UP the autonomous will continue
+//                {
+//                    motorLift.setPower(0);
+//                    seqRobot++;
+//                }
+//                break;
+//            }
 //
-//                // Define drive train target position and motor power.E
-//                targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
-//                targetDrDistInch = 4f; // Set target distance
-//                targetPower = 0.05d;  // Set power
-//
-//                // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
-//                // counts) and to initiate the move. cmdMoveR initiates a relative move.
-//                // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
-//                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-//                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
-//                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
-//                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
-//
+//            case 9:
+//            { // Check the position of the motor and don't move on until it is within
+//                // the correct range
+//                if (motorLift.getCurrentPosition() >= LIFT_UP -10 &&
+//                        motorLift.getCurrentPosition() <= LIFT_UP + 10) {
+//                    motorLift.setTargetPosition(LIFT_UP);
+//                    motorLift.setPower(0.05);
+//                } else { // If not within range, repeat case
+//                    seqRobot = 3;
+//                }
 //                seqRobot++;
 //                break;
 //            }
-            case 5: { // Strafe the robot to the left and off the shuttle
+            case 8:
+            { // Strafe the robot to the left and off the shuttle
 
                 // Define drive train target position and motor power.E
                 targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
-                targetDrDistInch = 20; // Set target distance
-                targetPower = 0.5d;  // Set power
+                targetDrDistInch = 4f; // Set target distance
+                targetPower = 0.05d;  // Set power
 
                 // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
-                // counts) and to initiate the mov\e. cmdMoveR initiates a relative move.
+                // counts) and to initiate the move. cmdMoveR initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
                 targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
+                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
+                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
                 targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
 
                 seqRobot++;
                 break;
             }
+//            case 7: { // Strafe the robot to the left and off the shuttle
+//
+//                // Define drive train target position and motor power.E
+//                targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
+//                targetDrDistInch = 55f; // Set target distance
+//                targetPower = 0.5d;  // Set power
+//
+//                // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
+//                // counts) and to initiate the move. cmdMoveR initiates a relative move.
+//                // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
+//                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
+//                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
+//                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
+//                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
+//
+//                seqRobot++;
+//                break;
+//            }
 //
 //            case 10:
 //            {
@@ -285,4 +286,4 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
 
     }
 
-} // End OpMode
+} // End

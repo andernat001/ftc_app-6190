@@ -62,13 +62,13 @@ public abstract class CyberRoverAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = 1309, LIFT_DOWN = 0,
+            LIFT_UP = 1140, LIFT_DOWN = 0,
             ERROR_DRV_POS = 10;                 // Allowed error in encoder counts following drive train position move
 
     // Establish Float Constants
     final static float
             SERVO_LOCKED = 0.639f,
-            SERVO_UNLOCKED = 0.905f,
+            SERVO_UNLOCKED = 0.910f,
             DEPOT_UP = 0.528f,
             DEPOT_DOWN = 0.883f,
             ENCODER_CNT_PER_IN_DRIVE = 59.42f; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
@@ -123,7 +123,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        seqRobot = 1;
+        seqRobot = 0;
 
         bDirection = true;
     } // End OpMode Initialization Method

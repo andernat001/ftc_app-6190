@@ -166,18 +166,6 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = -velocityDrive + rotationDrive - strafeDrive;
         }
 
-        // Lift program controls
-
-        /*if (gamepad2.y) // Tested to see if motorLift would work in set to position mode...
-        // it didn't work
-        {
-            motorLift.setTargetPosition(LIFT_UP);
-        }
-        if (gamepad2.a)
-        {
-            motorLift.setTargetPosition(LIFT_DOWN);
-        }*/
-
         if (gamepad2.left_stick_y <= 0.075 || gamepad2.left_stick_y >= -0.75) // Make motorLift's
         // maximum power 0.075
         {
@@ -218,26 +206,26 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         else {
             servoDepotDrop.setPosition(DEPOT_UP);
         }
-        /* // Controls used to test the needed position of the servo
-        if (gamepad2.x)
-        {
-            depot = depot + INC_VAL;
-            servoDepotDrop.setPosition(depot/180);
-            slp(100);
-        }
-        if (gamepad2.b)
-        {
-            if (depot > 0)
-            {
-                depot = depot - INC_VAL;
-            }
-            else
-            {
-                depot = 0;
-            }
-            servoDepotDrop.setPosition(depot/180);
-            slp(100);
-        }*/
+//         // Controls used to test the needed position of the servo
+//        if (gamepad2.x)
+//        {
+//            depot = depot + INC_VAL;
+//            servoDepotDrop.setPosition(depot/180);
+//            slp(100);
+//        }
+//        if (gamepad2.b)
+//        {
+//            if (depot > 0)
+//            {
+//                depot = depot - INC_VAL;
+//            }
+//            else
+//            {
+//                depot = 0;
+//            }
+//            servoDepotDrop.setPosition(depot/180);
+//            slp(100);
+//        }
 
         // Add telemetry for use while driving and for resetting system positions between matches
         telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not
