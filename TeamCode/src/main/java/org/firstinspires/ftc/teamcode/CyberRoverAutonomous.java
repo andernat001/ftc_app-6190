@@ -79,8 +79,8 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 // the correct range
                 motorLift.setTargetPosition(LIFT_UP);
                 motorLift.setPower(0.15);
-                if (motorLift.getCurrentPosition() >= LIFT_UP + 10 &&
-                        motorLift.getCurrentPosition() <= LIFT_UP - 10) {
+                if (motorLift.getCurrentPosition() <= LIFT_UP + 10 &&
+                        motorLift.getCurrentPosition() >= LIFT_UP - 10) {
                     motorLift.setPower(0);
                     seqRobot++;
                 } else { // If not within range, repeat case
