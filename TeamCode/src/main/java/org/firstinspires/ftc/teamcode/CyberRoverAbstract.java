@@ -51,7 +51,7 @@ public abstract class CyberRoverAbstract extends OpMode {
             depot,
             velocityDrive, strafeDrive, rotationDrive;
     protected Servo
-            servoLock,servoDepot, servoDepotDrop;
+            servoLock, servoDepot, servoDepotDrop;
 
     // Establish Integer Variables
     protected int
@@ -62,7 +62,7 @@ public abstract class CyberRoverAbstract extends OpMode {
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = 1140, LIFT_DOWN = 0,
+            LIFT_UP = -1070,
             ERROR_DRV_POS = 10;                 // Allowed error in encoder counts following drive train position move
 
     // Establish Float Constants

@@ -38,33 +38,19 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         motorLeftA.setPower(powerLeftA);
         motorLeftB.setPower(powerLeftB);
 
-        //Create dead-zone for drive train controls
-        if (gamepad1.left_trigger <= 0.1) {
-            gamepad1.left_trigger = 0;
-        }
-        if (gamepad1.right_trigger <= 0.1) {
-            gamepad1.right_trigger = 0;
-        }
-        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
-            gamepad1.left_stick_y = 0;
-        }
-        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
-            gamepad1.right_stick_x = 0;
-        }
-
         // Set controls for drive train
-        velocityDrive = gamepad1.left_stick_y;
+        velocityDrive = -gamepad1.left_stick_y;
         if (gamepad1.left_trigger >= 0.05) // Left trigger strafes to the left
         {
-            strafeDrive = - gamepad1.left_trigger;
+            strafeDrive = gamepad1.left_trigger;
         } else if (gamepad1.right_trigger >= 0.05) // Right trigger strafes to the right
         {
-            strafeDrive = gamepad1.right_trigger;
+            strafeDrive = -gamepad1.right_trigger;
         } else
         {
             strafeDrive = 0;
         }
-        rotationDrive = -gamepad1.right_stick_x;
+        rotationDrive = gamepad1.right_stick_x;
 
         //Field-Oriented on/off
         if (gamepad1.y)
@@ -87,7 +73,6 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             x = -y * Math.sin(Math.toDegrees(gyro())) + x * Math.cos(Math.toDegrees(gyro()));
             y = temp;
         }
-
 
         //Set floats strafeDrive and velocityDrive
         strafeDrive = (float) x;
@@ -132,6 +117,20 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = Range.clip(powerLeftB, -1, 1);
         }
 
+        //Create dead-zone for drive train controls
+        if (gamepad1.left_trigger <= 0.1) {
+            gamepad1.left_trigger = 0;
+        }
+        if (gamepad1.right_trigger <= 0.1) {
+            gamepad1.right_trigger = 0;
+        }
+        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
+            gamepad1.left_stick_y = 0;
+        }
+        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
+            gamepad1.right_stick_x = 0;
+        }
+
         //Switch Drive
         if (gamepad1.dpad_up)
         {
@@ -166,14 +165,14 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = -velocityDrive + rotationDrive - strafeDrive;
         }
 
-        if (gamepad2.left_stick_y <= 0.075 || gamepad2.left_stick_y >= -0.75) // Make motorLift's
+        if (gamepad2.left_stick_y <= 0.25 || gamepad2.left_stick_y >= -0.25) // Make motorLift's
         // maximum power 0.075
         {
-            powerLift = -gamepad2.left_stick_y;
+            powerLift = gamepad2.left_stick_y;
             powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
             // joystick is pressed
         } else {
-            powerLift = 0.075f;
+            powerLift = 0.25f;
         }
         motorLift.setPower(powerLift);
 

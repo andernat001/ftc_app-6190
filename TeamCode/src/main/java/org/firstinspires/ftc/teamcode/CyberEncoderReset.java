@@ -31,6 +31,13 @@ public class CyberEncoderReset extends CyberRoverAbstract {
         motorRightA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+        telemetry.addData("LeftA Encoder: ", motorLeftA.getCurrentPosition());
+        telemetry.addData("LeftB Encoder: ", motorLeftB.getCurrentPosition());
+        telemetry.addData("RightA Encoder: ", motorRightA.getCurrentPosition());
+        telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
+        telemetry.update();
+
             // End Robot Sequence
     }
 }
