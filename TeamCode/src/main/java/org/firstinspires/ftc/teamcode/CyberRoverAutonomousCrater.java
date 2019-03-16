@@ -33,7 +33,8 @@ public class CyberRoverAutonomousCrater extends CyberRoverAbstract{
         // START ROBOT SEQUENCE
         // Establish the robot sequence of operation with the Switch operation.
         // The active Case (i.e., sequence step) is established by the value in seqRobot.
-        // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
+        // After a Case executes, Break the switch to prevent executing subsequent cases
+        // unintentionally.
         switch (seqRobot) {
             case 0: {
                 timer.reset();
@@ -60,17 +61,20 @@ public class CyberRoverAutonomousCrater extends CyberRoverAbstract{
             case 2: { // Strafe the robot to the left and off the shuttle
 
                 // Define drive train target position and motor power.E
-                targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
                 targetDrDistInch = -55f; // Set target distance
                 targetPower = -0.5d;  // Set power
 
                 // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
                 // counts) and to initiate the move. cmdMoveR [-;initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
-                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
+                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftA);
+                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower,
+                        motorLeftB);
+                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower,
+                        motorRightA);
+                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightB);
 
                 seqRobot++;
                 break;
@@ -82,12 +86,14 @@ public class CyberRoverAutonomousCrater extends CyberRoverAbstract{
                 // Use this OpModes's custom chkMove to determine if motor move(s) are complete
                 // chkMove Parameters (motor, target, allowed +/- error counts from target)
                 // May need to add motor-is-busy check to ensure electric breaking complete.
-                // May need to compensate for motor power if one motor is faster than another to keep straight line.
+                // May need to compensate for motor power if one motor is faster than another to
+                // keep straight line.
                 if (chkMove(motorLeftA, targetPosLeftA, ERROR_DRV_POS) &&
                         chkMove(motorLeftB, targetPosLeftB, ERROR_DRV_POS) &&
                         chkMove(motorRightA, targetPosRightA, ERROR_DRV_POS) &&
                         chkMove(motorRightB, targetPosRightB, ERROR_DRV_POS))
-                {    // If drive train at target, hold position for X amount of time to stabilize motors.
+                {    // If drive train at target, hold position for X amount of time to stabilize
+                    // motors.
                     seqRobot++;
                 }
                 break;
@@ -137,8 +143,8 @@ public class CyberRoverAutonomousCrater extends CyberRoverAbstract{
         telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
         telemetry.addData("RightB Target: ", motorRightB.getTargetPosition());
         telemetry.addData("RightB Power: ", motorRightB.getPower());
-
         telemetry.addData("Case: ", seqRobot);
+
         telemetry.update();
 
 

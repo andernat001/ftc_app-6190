@@ -33,7 +33,8 @@ public class CyberRoverAutonomous20Delay extends CyberRoverAbstract{
         // START ROBOT SEQUENCE
         // Establish the robot sequence of operation with the Switch operation.
         // The active Case (i.e., sequence step) is established by the value in seqRobot.
-        // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
+        // After a Case executes, Break the switch to prevent executing subsequent cases
+        // unintentionally.
         switch (seqRobot) {
             case 0: {
                 timer.reset();
@@ -50,14 +51,12 @@ public class CyberRoverAutonomous20Delay extends CyberRoverAbstract{
                 motorRightB.setPower(0);
                 motorLeftA.setPower(0);
                 motorLeftB.setPower(0);
-                if (timer.milliseconds() > 5000) // Wait 20 seconds
+                if (timer.milliseconds() > 5000) // Wait 20 seconds (total)
                 {
                     seqRobot++;
                     timer.reset();
                 }
-                break; // Note: The Break command will ensure one scan of code executed while motor
-                // modes take effect. If Run-to-Position not enabled, unexpected operations
-                // may occur.
+                break;
             }
 
             case 5: { // Unlock the locking mechanism and set down robot
@@ -80,9 +79,10 @@ public class CyberRoverAutonomous20Delay extends CyberRoverAbstract{
                 // the correct range
                 motorLift.setTargetPosition(LIFT_UP);
                 motorLift.setPower(0.05);
-                if (motorLift.getCurrentPosition() >= LIFT_UP + 10 &&
-                        motorLift.getCurrentPosition() <= LIFT_UP - 10) {
+                if (motorLift.getCurrentPosition() <= LIFT_UP + 10 &&
+                        motorLift.getCurrentPosition() >= LIFT_UP - 10) {
                     motorLift.setPower(0);
+                    seqRobot++;
                 } else { // If not within range, repeat case
                     seqRobot = 6;
                 }
@@ -112,8 +112,8 @@ public class CyberRoverAutonomous20Delay extends CyberRoverAbstract{
         telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
         telemetry.addData("RightB Target: ", motorRightB.getTargetPosition());
         telemetry.addData("RightB Power: ", motorRightB.getPower());
-
         telemetry.addData("Case: ", seqRobot);
+
         telemetry.update();
 
 

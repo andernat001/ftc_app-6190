@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "RoverBot")
 public class CyberRoverTeleOp extends CyberRoverAbstract{
-    public CyberRoverTeleOp() {
-    }
 
     @Override
     public void init() {
@@ -169,8 +167,8 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         // maximum power 0.075
         {
             powerLift = gamepad2.left_stick_y;
-            powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
-            // joystick is pressed
+            powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far
+            // the joystick is pressed
         } else {
             powerLift = 0.25f;
         }
@@ -205,7 +203,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         else {
             servoDepotDrop.setPosition(DEPOT_UP);
         }
-//         // Controls used to test the needed position of the servo
+//         // Controls used to test the needed position of the depot servo
 //        if (gamepad2.x)
 //        {
 //            depot = depot + INC_VAL;
@@ -230,13 +228,13 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not
         telemetry.addData("Lock Position:", servoLock.getPosition()); // Will tell position
         // of servoLock
-        telemetry.addData("Depot Drop Position:", servoDepotDrop.getPosition()); // Will tell position
-        // of servoDepot
+        telemetry.addData("Depot Drop Position:", servoDepotDrop.getPosition()); // Will tell
+        // position of servoDepot
         telemetry.addData("Lift Position", motorLift.getCurrentPosition()); // Will tell
         // position of motorLift
         telemetry.update(); // Updates telemetry
 
-// End OpMode Loop Method
+    // End OpMode Loop Method
     }
     private void slp(int slptime) {
         try {

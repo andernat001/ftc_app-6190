@@ -33,7 +33,8 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
         // START ROBOT SEQUENCE
         // Establish the robot sequence of operation with the Switch operation.
         // The active Case (i.e., sequence step) is established by the value in seqRobot.
-        // After a Case executes, Break the switch to prevent executing subsequent cases unintentionally.
+        // After a Case executes, Break the switch to prevent executing subsequent cases
+        // unintentionally.
         switch (seqRobot) {
             case 0: {
                 timer.reset();
@@ -48,14 +49,12 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                 motorRightB.setPower(0);
                 motorLeftA.setPower(0);
                 motorLeftB.setPower(0);
-                if (timer.milliseconds() > 1000) // Wait 10 seconds
+                if (timer.milliseconds() > 5000) // Wait 10 seconds (total)
                 {
                     seqRobot++;
                     timer.reset();
                 }
-                break; // Note: The Break command will ensure one scan of code executed while motor
-                // modes take effect. If Run-to-Position not enabled, unexpected operations
-                // may occur.
+                break;
             }
 
             case 3: { // Unlock the locking mechanism and set down robot
@@ -69,7 +68,6 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                         motorLift.getCurrentPosition() >= LIFT_UP -20) // Once motorLift is
                 // within 20 encoder counts of LIFT_UP the autonomous will continue
                 {
-                    motorLift.setPower(0);
                     seqRobot++;
                 }
                 break;
@@ -92,23 +90,27 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
 
             case 5: { // Strafe the robot to the left and off the shuttle
 
-                // Define drive train target position and motor power.E
-                targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
+                // Define drive train target position and motor power.
                 targetDrDistInch = 5f; // Set target distance
                 targetPower = 0.05d;  // Set power
 
                 // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
                 // counts) and to initiate the move. cmdMoveR initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
-                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
+                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftA);
+                targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftB);
+                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE,
+                        -targetPower, motorRightA);
+                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightB);
 
                 seqRobot++;
                 break;
             }
 
+            case 15:
             case 9:
             case 6:
                 // Hold until drive train move is complete
@@ -116,17 +118,20 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                 // Use this OpModes's custom chkMove to determine if motor move(s) are complete
                 // chkMove Parameters (motor, target, allowed +/- error counts from target)
                 // May need to add motor-is-busy check to ensure electric breaking complete.
-                // May need to compensate for motor power if one motor is faster than another to keep straight line.
+                // May need to compensate for motor power if one motor is faster than another to
+                // keep straight line.
                 if (chkMove(motorLeftA, targetPosLeftA, ERROR_DRV_POS) &&
                         chkMove(motorLeftB, targetPosLeftB, ERROR_DRV_POS) &&
                         chkMove(motorRightA, targetPosRightA, ERROR_DRV_POS) &&
                         chkMove(motorRightB, targetPosRightB, ERROR_DRV_POS))
-                {    // If drive train at target, hold position for X amount of time to stabilize motors.
+                {    // If drive train at target, hold position for X amount of time to stabilize
+                    // motors.
                     seqRobot++;
                 }
                 break;
             }
 
+            case 16:
             case 10:
             case 7:// Reset encoders
             {
@@ -149,27 +154,29 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                 break;
             }
 
-            case 8: { // Strafe the robot to the left and off the shuttle
+            case 8: { // Drive forward towards the depot
 
-                // Define drive train target position and motor power.E
-                targetDrRotateDeg = 0f; // Not used in this step, but reported via telemetry in the next step.
+                // Define drive train target position and motor power.
                 targetDrDistInch = 20; // Set target distance
                 targetPower = 0.5d;  // Set power
 
                 // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
                 // counts) and to initiate the mov\e. cmdMoveR initiates a relative move.
                 // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
-                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftA);
-                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorLeftB);
-                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightA);
-                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower, motorRightB);
+                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftA);
+                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftB);
+                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightA);
+                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightB);
 
                 seqRobot++;
                 break;
             }
 
-            case 11:
-            {
+            case 11: { // Turn the robot to drop off the marker
                 if (gyro() >= 44 || gyro() <= 46) {
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
@@ -191,8 +198,7 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                 break;
             }
 
-            case 12:
-            {
+            case 12: { // Drop Marker
                 servoDepotDrop.setPosition(DEPOT_DOWN);
                 if (timer.milliseconds() > 3000) // Wait 3 seconds
                 {
@@ -202,16 +208,36 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
                 break;
             }
 
-            case 13:
-            {
+            case 13: { // Retract marker deployment mechanism
                 servoDepotDrop.setPosition(DEPOT_UP);
                 if (timer.milliseconds() > 500) // Wait 0.5 second
                 {
                     seqRobot++;
-                    timer.reset();
                 }
                 break;
             }
+
+            case 14: { // Move away from the depot
+                // Define drive train target position and motor power.
+                targetDrDistInch = 7; // Set target distance
+                targetPower = 0.5d;  // Set power
+
+                // Use this OpModes's custom cmdMoveR method to calculate new target (in encoder
+                // counts) and to initiate the mov\e. cmdMoveR initiates a relative move.
+                // cmdMove Parameters (distance inches, encoder count per inch, power, motor).
+                targetPosLeftA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftA);
+                targetPosLeftB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorLeftB);
+                targetPosRightA = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightA);
+                targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
+                        motorRightB);
+
+                seqRobot++;
+                break;
+            }
+
             case 99:  // Done
             {
                 break;
@@ -235,11 +261,10 @@ public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
         telemetry.addData("RightB Encoder: ", motorRightB.getCurrentPosition());
         telemetry.addData("RightB Target: ", motorRightB.getTargetPosition());
         telemetry.addData("RightB Power: ", motorRightB.getPower());
-
         telemetry.addData("Case: ", seqRobot);
+
         telemetry.update();
 
 
     }
-
 } // End
