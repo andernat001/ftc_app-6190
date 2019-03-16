@@ -80,8 +80,8 @@ public class CyberRoverAutonomous20Delay extends CyberRoverAbstract{
                 // the correct range
                 motorLift.setTargetPosition(LIFT_UP);
                 motorLift.setPower(0.05);
-                if (motorLift.getCurrentPosition() >= LIFT_UP + 10 &&
-                        motorLift.getCurrentPosition() <= LIFT_UP - 10) {
+                if (motorLift.getCurrentPosition() <= LIFT_UP + 10 &&
+                        motorLift.getCurrentPosition() >= LIFT_UP - 10) {
                     motorLift.setPower(0);
                 } else { // If not within range, repeat case
                     seqRobot = 6;
