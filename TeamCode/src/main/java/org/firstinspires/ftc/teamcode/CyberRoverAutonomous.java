@@ -48,6 +48,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                     motorRightB.setPower(0);
                     motorLeftA.setPower(0);
                     motorLeftB.setPower(0);
+
                     if (timer.milliseconds() > 1000) // Wait 1 second
                     {
                         seqRobot++;
@@ -58,7 +59,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
 
             case 2: { // Unlock the locking mechanism and set down robot
                     servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
-                    if (timer.milliseconds() > 2000) // Wait 1.500 seconds
+                    if (timer.milliseconds() > 2000) // Wait 2 seconds
                     {
                         motorLift.setTargetPosition(LIFT_UP);
                         motorLift.setPower(0.35);
@@ -86,6 +87,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 }
                 break;
             }
+
 
             case 4: { // Strafe the robot to the left and off the shuttle
 

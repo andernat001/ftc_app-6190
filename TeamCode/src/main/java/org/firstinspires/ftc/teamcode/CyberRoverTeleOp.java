@@ -165,6 +165,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 
         if (gamepad2.left_stick_y <= 0.25 || gamepad2.left_stick_y >= -0.25) // Make motorLift's
         // maximum power 0.075
+
         {
             powerLift = gamepad2.left_stick_y;
             powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far
@@ -191,6 +192,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             locked = true;
             slp(250);// The program will wait, so it does not think the button is pressed
             // again before you release it
+
         }
         if(locked)
         {
@@ -203,6 +205,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         else {
             servoDepotDrop.setPosition(DEPOT_UP);
         }
+      
 //         // Controls used to test the needed position of the depot servo
 //        if (gamepad2.x)
 //        {
@@ -223,6 +226,7 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
 //            servoDepotDrop.setPosition(depot/180);
 //            slp(100);
 //        }
+
 
         // Add telemetry for use while driving and for resetting system positions between matches
         telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not

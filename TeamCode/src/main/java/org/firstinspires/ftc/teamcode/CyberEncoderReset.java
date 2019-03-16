@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp (name = "Encoder Reset", group = "RiderModes")
 public class CyberEncoderReset extends CyberRoverAbstract {
 
 
@@ -41,3 +40,4 @@ public class CyberEncoderReset extends CyberRoverAbstract {
             // End Robot Sequence
     }
 }
+
