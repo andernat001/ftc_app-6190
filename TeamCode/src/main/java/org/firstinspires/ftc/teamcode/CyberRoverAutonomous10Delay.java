@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Rover", group = "RiderModes")
-public class CyberRoverAutonomous extends CyberRoverAbstract{
+@Autonomous(name = "Rover10", group = "RiderModes")
+public class CyberRoverAutonomous10Delay extends CyberRoverAbstract{
 
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);  // Added so
     // opMode does not sleep
@@ -42,54 +42,53 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
+            case 2:
             case 1: { // Set all motor power to 0
-                    motorLift.setPower(0);
-                    motorRightA.setPower(0);
-                    motorRightB.setPower(0);
-                    motorLeftA.setPower(0);
-                    motorLeftB.setPower(0);
-
-                    if (timer.milliseconds() > 1000) // Wait 1 second
-                    {
-                        seqRobot++;
-                        timer.reset();
-                    }
-                    break;
-            }
-
-            case 2: { // Unlock the locking mechanism and set down robot
-                    servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
-                    if (timer.milliseconds() > 2000) // Wait 2 seconds
-                    {
-                        motorLift.setTargetPosition(LIFT_UP);
-                        motorLift.setPower(0.35);
-                    }
-                    if (motorLift.getCurrentPosition() <= LIFT_UP + 20 &&
-                            motorLift.getCurrentPosition() >= LIFT_UP - 20) // Once motorLift is
-                        // within 20 encoder counts of LIFT_UP the autonomous will continue
-                    {
-                        seqRobot++;
-                    }
-                    break;
-            }
-
-            case 3: { // Check the position of the motor and don't move on until it is within
-                // the correct range
-                motorLift.setTargetPosition(LIFT_UP);
-                motorLift.setPower(0.15);
-                if (motorLift.getCurrentPosition() <= LIFT_UP + 10 &&
-                        motorLift.getCurrentPosition() >= LIFT_UP - 10) {
-                    motorLift.setPower(0);
+                motorLift.setPower(0);
+                motorRightA.setPower(0);
+                motorRightB.setPower(0);
+                motorLeftA.setPower(0);
+                motorLeftB.setPower(0);
+                if (timer.milliseconds() > 5000) // Wait 10 seconds (total)
+                {
                     seqRobot++;
-                } else { // If not within range, repeat case
                     timer.reset();
-                    seqRobot = 3;
                 }
                 break;
             }
 
+            case 3: { // Unlock the locking mechanism and set down robot
+                servoLock.setPosition(SERVO_UNLOCKED);// Unlock locking mechanism
+                if (timer.milliseconds() > 2000) // Wait 1.500 seconds
+                {
+                    motorLift.setTargetPosition(LIFT_UP);
+                    motorLift.setPower(0.35);
+                }
+                if (motorLift.getCurrentPosition() <= LIFT_UP + 20 &&
+                        motorLift.getCurrentPosition() >= LIFT_UP -20) // Once motorLift is
+                // within 20 encoder counts of LIFT_UP the autonomous will continue
+                {
+                    seqRobot++;
+                }
+                break;
+            }
 
-            case 4: { // Strafe the robot to the left and off the shuttle
+            case 4: { // Check the position of the motor and don't move on until it is within
+                // the correct range
+                motorLift.setTargetPosition(LIFT_UP);
+                motorLift.setPower(0.15);
+                if (motorLift.getCurrentPosition() >= LIFT_UP - 10 &&
+                        motorLift.getCurrentPosition() <= LIFT_UP + 10) {
+                    motorLift.setPower(0);
+                    seqRobot++;
+                } else { // If not within range, repeat case
+                    seqRobot = 4;
+                }
+                seqRobot++;
+                break;
+            }
+
+            case 5: { // Strafe the robot to the left and off the shuttle
 
                 // Define drive train target position and motor power.
                 targetDrDistInch = 5f; // Set target distance
@@ -102,8 +101,8 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                         motorLeftA);
                 targetPosLeftB = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
                         motorLeftB);
-                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, -targetPower,
-                        motorRightA);
+                targetPosRightA = cmdMoveR(-targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE,
+                        -targetPower, motorRightA);
                 targetPosRightB = cmdMoveR(targetDrDistInch, ENCODER_CNT_PER_IN_DRIVE, targetPower,
                         motorRightB);
 
@@ -111,9 +110,9 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 14:
+            case 15:
             case 9:
-            case 5:
+            case 6:
                 // Hold until drive train move is complete
             {
                 // Use this OpModes's custom chkMove to determine if motor move(s) are complete
@@ -132,9 +131,9 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 15:
-            case 8:
-            case 6:// Reset encoders
+            case 16:
+            case 10:
+            case 7:// Reset encoders
             {
                 motorLeftA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -155,7 +154,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 7: { // Drive forward towards the depot
+            case 8: { // Drive forward towards the depot
 
                 // Define drive train target position and motor power.
                 targetDrDistInch = 20; // Set target distance
@@ -177,8 +176,12 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 10: { // Turn the robot to drop off the marker
+            case 11: { // Turn the robot to drop off the marker
                 if (gyro() >= 44 || gyro() <= 46) {
+                    motorLeftA.setPower(0);
+                    motorLeftB.setPower(0);
+                    motorRightA.setPower(0);
+                    motorRightB.setPower(0);
                     seqRobot++;
                     timer.reset();
                 } else if ( gyro() < 44){
@@ -195,7 +198,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 11: { // Drop marker
+            case 12: { // Drop Marker
                 servoDepotDrop.setPosition(DEPOT_DOWN);
                 if (timer.milliseconds() > 3000) // Wait 3 seconds
                 {
@@ -205,7 +208,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 12: { // Retract marker deployment mechanism
+            case 13: { // Retract marker deployment mechanism
                 servoDepotDrop.setPosition(DEPOT_UP);
                 if (timer.milliseconds() > 500) // Wait 0.5 second
                 {
@@ -214,7 +217,7 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
                 break;
             }
 
-            case 13: { // Move away from the depot
+            case 14: { // Move away from the depot
                 // Define drive train target position and motor power.
                 targetDrDistInch = 7; // Set target distance
                 targetPower = 0.5d;  // Set power
@@ -264,5 +267,4 @@ public class CyberRoverAutonomous extends CyberRoverAbstract{
 
 
     }
-
-} // End OpMode
+} // End

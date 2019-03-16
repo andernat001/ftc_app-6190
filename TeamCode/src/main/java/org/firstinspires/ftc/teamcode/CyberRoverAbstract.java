@@ -29,59 +29,57 @@ public abstract class CyberRoverAbstract extends OpMode {
             SERVO_DEPOT_DROP = "depotDrop",
             SENSOR_COLOR = "color";
 
+    protected DcMotor
+            motorLeftA, motorLeftB,
+            motorRightA, motorRightB,
+            motorLift;
+
+    protected Servo
+            servoLock, servoDepot, servoDepotDrop;
+
     protected boolean                  // Used to detect initial press of "A" button on gamepad 1
             pulseCaseMoveDone, // Case move complete pulse
             red,blue,
             fieldOrient,
             bDirection,
             locked;
-    protected DcMotor
-            motorLeftA, motorLeftB,
-            motorRightA, motorRightB,
-            motorLift;
+
     // Auto: Values used to determine current color detected
     protected float
-            targetDrDistInch,                   // Targets for motor moves in sequence (engineering units)
-            targetDrRotateDeg,
-            hsvValues[] = {0F, 0F, 0F},
+            targetDrDistInch,                   // Targets for motor moves in sequence (engineering
+                                                // units)
             powerLeftA, powerLeftB,
             powerRightA, powerRightB,
             powerLift,
-            depot,
             velocityDrive, strafeDrive, rotationDrive;
-    protected Servo
-            servoLock,servoDepot, servoDepotDrop;
 
     // Establish Integer Variables
     protected int
             seqRobot, target, // Switch operation integer used to identify sequence step.
             targetPosLeftA, targetPosLeftB,
-            targetPosRightA, targetPosRightB;      // Drive train motor target variables (encoder counts)
+            targetPosRightA, targetPosRightB;      // Drive train motor target variables (encoder
+                                                    // counts)
+
+    //Establish Double Variables
+    protected double
+            targetPower, // General motor power variable (%, -1.0 to 1.0)
+            temp,
+            x, y;
 
     // Establish Integer Constants
     final static int
             INC_VAL = 1,
-            LIFT_UP = 1309, LIFT_DOWN = 0,
-            ERROR_DRV_POS = 20;                 // Allowed error in encoder counts following drive train position move
+            LIFT_UP = -1070,
+            ERROR_DRV_POS = 10;                 // Allowed error in encoder counts following drive
+                                                // train position move
 
     // Establish Float Constants
     final static float
             SERVO_LOCKED = 0.639f,
-            SERVO_UNLOCKED = 0.905f,
+            SERVO_UNLOCKED = 0.910f,
             DEPOT_UP = 0.528f,
             DEPOT_DOWN = 0.883f,
-            ENCODER_CNT_PER_IN_DRIVE = 59.42f; // (28 count/motor rev x 40 motor rev / shaft rev) / (6" dia. wheel x pi)
-
-
-    // Establish Double Constants
-    final static double
-            DELAY_DRV_MOV_DONE = 250d;        // Hold/wait 0.1s after drive train move complete (seconds)
-
-    protected double
-            targetPower, // General motor power variable (%, -1.0 to 1.0)
-            temp,
-            x, y,
-            tbd;
+            ENCODER_CNT_PER_IN_DRIVE = 59.42f; // (28 count/motor rev x 40 motor rev / shaft rev) /
 
     //------------------------------------------------------------------
     // Robot Initialization Method
@@ -122,7 +120,7 @@ public abstract class CyberRoverAbstract extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        seqRobot = 4;
+        seqRobot = 0;
 
         bDirection = true;
     } // End OpMode Initialization Method
@@ -134,8 +132,6 @@ public abstract class CyberRoverAbstract extends OpMode {
     public void loop()
     {
     }
-
-
 
     //------------------------------------------------------------------
     // Stop Method
@@ -151,23 +147,13 @@ public abstract class CyberRoverAbstract extends OpMode {
     } // End OpMode Stop Method
 
     double gyro() {
-        return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).
+                firstAngle;
     }
 
     //------------------------------------------------------------------
     // Miscellaneous Methods
     //------------------------------------------------------------------
-
-    // calcRotate Method
-    // Calculate linear distance needed for desired rotation
-    // Parameters:
-    // 		rotateDeg = Rotation desired (degrees)
-    //		anglePerIn = Angle of rotation when left and right move 1 inch in opposite directions
-    // Return: linear distance in inches
-    float calcRotate(float rotateDeg, float anglePerIn)
-    {
-        return rotateDeg / anglePerIn;
-    }
 
     // cmdMoveR Method
     // Convert desired distance from inches to encoder counts, establish new motor target, and set
@@ -192,29 +178,6 @@ public abstract class CyberRoverAbstract extends OpMode {
         return target;
     }
 
-    // cmdMoveA Method
-    // Convert desired distance from inches to encoder counts, establish new motor target, and set
-    // motor power. New motor target is assumed to be absolute; in other words, motor target is
-    // based on the original home position.
-    // Parameters:
-    //		distIn = Absolute target distance (inches)
-    //		encoderCntPerIn = encoder-to-inches conversion
-    //		power = desired motor power (%)
-    //		motor = motor
-    // Return: New target (encoder counts)
-
-    int cmdMoveA(float distIn, float encoderCntPerIn, double power, DcMotor motor)
-    {
-        // Solve for encoder count target. (int) needed to cast result as integer
-        int target = (int) (distIn * encoderCntPerIn);
-
-        // Set motor target and power
-        motor.setTargetPosition(target);
-        motor.setPower(power);
-
-        return target;
-    }
-
     // chkMove method
     // Verify motor has achieved target
     // Parameters:
@@ -230,29 +193,6 @@ public abstract class CyberRoverAbstract extends OpMode {
         int currentPos = motor.getCurrentPosition();
         return ((currentPos >= (target - delta)) && (currentPos <= (target + delta)));
     }
-
-    char seeJewel(int redVal, int blueVal, float hueVal)
-    {
-        {
-            if (redVal > blueVal)
-            {
-                return 'R';
-            }
-            else if (blueVal > redVal)
-            {
-                return 'B';
-            }
-            else
-            {
-                return 'N';
-            }
-        }
-    }
-
-
-    //------------------------------------------------------------------
-    // Miscellaneous Methods
-    //------------------------------------------------------------------
 
     //	scaleInput method
     // (written by unknown FTC engineer)
@@ -294,43 +234,4 @@ public abstract class CyberRoverAbstract extends OpMode {
         // return scaled value.
         return dScale;
     }
-
-
-    // limit method - Recommend not using this method
-    // This method prevents over-extended motor movement. Once a limit is reached, you cannot go
-    // any further, but you may reverse course. Unfortunately this does not prevent significant
-    // overshoot. A better way to limit motor distance is to place the motor into Run-To-Position
-    // mode, and then adjust power manually.
-    //
-    // Method Parameters:
-    //     powerValue = desired motor throttle value
-    //     direction = (once the encoders are wired properly, this term may go away)
-    //     lower limit / upper limit = allowed range of movement
-    //
-    //  Motor Output:
-    //      powerValue = recalculated motor throttle
-    //
-    //  If time permits, you can revise the code to reduce motor power as a limit is approached.
-
-    float limit(float powerValue, double currentPos, double lowerLimit, double upperLimit)
-    {
-        if (currentPos > upperLimit)
-        {
-            if (powerValue > 0)
-            {
-                powerValue = 0;
-            }
-        }
-
-        if (currentPos < lowerLimit)
-        {
-            if (powerValue < 0)
-            {
-                powerValue = 0;
-            }
-        }
-
-        return powerValue;
-    }
-
 }

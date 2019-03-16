@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "RoverBot")
 public class CyberRoverTeleOp extends CyberRoverAbstract{
-    public CyberRoverTeleOp() {
-    }
 
     @Override
     public void init() {
@@ -38,33 +36,19 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         motorLeftA.setPower(powerLeftA);
         motorLeftB.setPower(powerLeftB);
 
-        //Create dead-zone for drive train controls
-        if (gamepad1.left_trigger <= 0.1) {
-            gamepad1.left_trigger = 0;
-        }
-        if (gamepad1.right_trigger <= 0.1) {
-            gamepad1.right_trigger = 0;
-        }
-        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
-            gamepad1.left_stick_y = 0;
-        }
-        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
-            gamepad1.right_stick_x = 0;
-        }
-
         // Set controls for drive train
-        velocityDrive = gamepad1.left_stick_y;
+        velocityDrive = -gamepad1.left_stick_y;
         if (gamepad1.left_trigger >= 0.05) // Left trigger strafes to the left
         {
-            strafeDrive = - gamepad1.left_trigger;
+            strafeDrive = gamepad1.left_trigger;
         } else if (gamepad1.right_trigger >= 0.05) // Right trigger strafes to the right
         {
-            strafeDrive = gamepad1.right_trigger;
+            strafeDrive = -gamepad1.right_trigger;
         } else
         {
             strafeDrive = 0;
         }
-        rotationDrive = -gamepad1.right_stick_x;
+        rotationDrive = gamepad1.right_stick_x;
 
         //Field-Oriented on/off
         if (gamepad1.y)
@@ -87,7 +71,6 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             x = -y * Math.sin(Math.toDegrees(gyro())) + x * Math.cos(Math.toDegrees(gyro()));
             y = temp;
         }
-
 
         //Set floats strafeDrive and velocityDrive
         strafeDrive = (float) x;
@@ -132,6 +115,20 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = Range.clip(powerLeftB, -1, 1);
         }
 
+        //Create dead-zone for drive train controls
+        if (gamepad1.left_trigger <= 0.1) {
+            gamepad1.left_trigger = 0;
+        }
+        if (gamepad1.right_trigger <= 0.1) {
+            gamepad1.right_trigger = 0;
+        }
+        if (gamepad1.left_stick_y <= 0.05 && gamepad1.left_stick_y >= -0.05) {
+            gamepad1.left_stick_y = 0;
+        }
+        if (gamepad1.right_stick_x <= 0.05 && gamepad1.right_stick_x >= -0.05) {
+            gamepad1.right_stick_x = 0;
+        }
+
         //Switch Drive
         if (gamepad1.dpad_up)
         {
@@ -166,27 +163,15 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
             powerLeftB = -velocityDrive + rotationDrive - strafeDrive;
         }
 
-        // Lift program controls
-
-        /*if (gamepad2.y) // Tested to see if motorLift would work in set to position mode...
-        // it didn't work
-        {
-            motorLift.setTargetPosition(LIFT_UP);
-        }
-        if (gamepad2.a)
-        {
-            motorLift.setTargetPosition(LIFT_DOWN);
-        }*/
-
-        if (gamepad2.left_stick_y <= 0.075 || gamepad2.left_stick_y >= -0.75) // Make motorLift's
+        if (gamepad2.left_stick_y <= 0.25 || gamepad2.left_stick_y >= -0.25) // Make motorLift's
         // maximum power 0.075
 
         {
-            powerLift = -gamepad2.left_stick_y;
-            powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far the
-            // joystick is pressed
+            powerLift = gamepad2.left_stick_y;
+            powerLift = (float) scaleInput(powerLift); // Scale the power of the motor to how far
+            // the joystick is pressed
         } else {
-            powerLift = 0.075f;
+            powerLift = 0.25f;
         }
         motorLift.setPower(powerLift);
 
@@ -220,40 +205,40 @@ public class CyberRoverTeleOp extends CyberRoverAbstract{
         else {
             servoDepotDrop.setPosition(DEPOT_UP);
         }
-        /* // Controls used to test the needed position of the servo
-        if (gamepad2.x)
-        {
-            depot = depot + INC_VAL;
-            servoDepotDrop.setPosition(depot/180);
-            slp(100);
-        }
+      
+//         // Controls used to test the needed position of the depot servo
+//        if (gamepad2.x)
+//        {
+//            depot = depot + INC_VAL;
+//            servoDepotDrop.setPosition(depot/180);
+//            slp(100);
+//        }
+//        if (gamepad2.b)
+//        {
+//            if (depot > 0)
+//            {
+//                depot = depot - INC_VAL;
+//            }
+//            else
+//            {
+//                depot = 0;
+//            }
+//            servoDepotDrop.setPosition(depot/180);
+//            slp(100);
+//        }
 
-        if (gamepad2.b)
-        {
-            if (depot > 0)
-            {
-                depot = depot - INC_VAL;
-            }
-            else
-            {
-                depot = 0;
-            }
-            servoDepotDrop.setPosition(depot/180);
-            slp(100);
-
-        }*/
 
         // Add telemetry for use while driving and for resetting system positions between matches
         telemetry.addData("Locked: ", locked); // Will say if the Lift is locked or not
         telemetry.addData("Lock Position:", servoLock.getPosition()); // Will tell position
         // of servoLock
-        telemetry.addData("Depot Drop Position:", servoDepotDrop.getPosition()); // Will tell position
-        // of servoDepot
+        telemetry.addData("Depot Drop Position:", servoDepotDrop.getPosition()); // Will tell
+        // position of servoDepot
         telemetry.addData("Lift Position", motorLift.getCurrentPosition()); // Will tell
         // position of motorLift
         telemetry.update(); // Updates telemetry
 
-// End OpMode Loop Method
+    // End OpMode Loop Method
     }
     private void slp(int slptime) {
         try {
